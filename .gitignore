@@ -50,3 +50,6 @@ deck/slide-preview-*.jpg
 *.log
 cron_inbox_dump.py
 cron_poll.py
+
+# Local OCI ops notes (IPs/OCIDs — keep off GitHub)
+deploy/oci.md
