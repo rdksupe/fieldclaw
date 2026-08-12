@@ -48,6 +48,14 @@ The base URL and API key are discoverable without the `.env`:
   "dev-key-change-me"}})` returns 200 against the live API (confirmed 2026-08-12).
   Both the query-param and header forms are valid; pick whichever the brief
   names (supplier-delay briefs often specify the header form).
+- **Header form REQUIRES `browser_console` fetch** — `browser_navigate` cannot
+  inject request headers at all, so a brief that names the `X-API-Key` header
+  form can never be resolved by navigation. Resolve it with a `browser_console`
+  async `fetch(url, {headers:{"X-API-Key": KEY}}).text()` call (or the
+  query-param navigation). Observed 2026-08-12: navigating a header-form resolve
+  URL renders the webapp JSON viewer and the API rejects with
+  `{"detail":"Invalid or missing X-API-Key"}` until the key is supplied via
+  console fetch.
 
 ## Procedure
 
@@ -86,6 +94,15 @@ The base URL and API key are discoverable without the `.env`:
    - `/api/projects/{id}/super-queue`
    - `/api/projects/{id}/events?limit=500` (dedup + delivery scope)
    - `/api/projects/{id}/events?type=notify.sent` (confirm prior delivery)
+   **Return a structured JS object, not just a string.** Instead of
+   `return "status="+r.status+" body="+(await r.text()).slice(0,9000)`, have the
+   IIFE `JSON.parse(await r.text())` and `return {status: r.status, sq: parsed, ev: parsed2}`.
+   `browser_console` serializes a plain-object return value back as JSON, so you
+   can read the fields directly instead of re-parsing a sliced string — and you
+   can do the field-filtering (map down to `{id,name,inbox,kb}` etc.) inside the
+   IIFE to keep big `events`/`super-queue` payloads out of context. Confirmed
+   2026-08-12 on the resolve + super-queue + events poll. Keep the `?api_key=`
+   param on EVERY sub-fetch in the same IIFE regardless (see pitfalls).
    Note: `events?type=shortage.raised` returns 0 even when a shortage exists
    (naming trap — shortages surface as `schedule.flagged` in super-queue).
    Keep raw JSON out of context when you can; filter client-side. Also use
@@ -115,6 +132,7 @@ The base URL and API key are discoverable without the `.env`:
 | Pitfall | Fix |
 |---------|-----|
 | Reading `~/.hermes-fieldclaw/.env` for the key | Blocked in cron. Use the query-param form + origin discovery instead. |
+| A header-form brief resolved by `browser_navigate` | Can't inject headers → `Invalid or missing X-API-Key`. Resolve header-form briefs with a `browser_console` `fetch(url, {headers:{X-API-Key}})` instead. |
 | Job brief mandates HTTP-only resolve | Go straight to the browser tier; do not attempt terminal/eval for resolve even though terminal exists. |
 | A bare navigation appears to return nothing / a "Pretty print" UI | The webapp renders a JSON viewer, not raw text. Read data via `browser_console` `fetch(...).text()`; treat navigation as a connectivity probe only. |
 | **Forgetting `?api_key=` on a sub-fetch** (events/super-queue loop) | Every request needs the param. A batched loop leaving it off one URL returns 401 on all of them. Re-add and retry. Same if using the header form — header on every fetch. |

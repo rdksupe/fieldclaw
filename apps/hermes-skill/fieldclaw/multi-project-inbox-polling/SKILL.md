@@ -1,7 +1,7 @@
 ---
 name: multi-project-inbox-polling
-description: Multi-project AgentMail inbox polling for FieldClaw cron — inbox→project routing, label-based inbound filtering, dedup against existing events, and empty-project orphan-inbound handling (report first sighting, then SILENT on repeats).
-version: 0.3.3
+description: Multi-project AgentMail inbox polling for FieldClaw cron — inbox→project routing, label-based inbound filtering, dedup against existing events, empty-project orphan-inbound handling, and self-seeded demo-corpus detection (report first sighting, then SILENT on repeats).
+version: 0.4.0
 ---
 
 # Multi-Project AgentMail Inbox Polling (FieldClaw cron)
@@ -48,7 +48,8 @@ Previous version of this pattern said to filter by `labels` containing `"inbox"`
 
 Prefer MCP (`mcp_agentmail_list_inboxes`, `mcp_agentmail_list_messages`,
 `mcp_agentmail_get_thread`). On MCP failure, fall back to REST at
-`https://api.agentmail.to/v0/` with `Authorization: Bearer {AGENT...nKey REST field: `inbox_id` (NOT `id`) is the identifier for subsequent calls.
+`https://api.agentmail.to/v0/` with `Authorization: Bearer {AGENT...Y}`.
+REST field: `inbox_id` (NOT `id`) is the identifier for subsequent calls.
 
 ## REST endpoint reference
 
@@ -116,6 +117,42 @@ finding exists:
 > `GET .../zones` both empty means the inbound sitemap/GeoJSON was never imported —
 > dedup must then lean on prior-run surfaced evidence, NOT on event existence.
 
+## Orphan inbound may be SELF-SEEDED demo data — check the KB `samples/` corpus + seed emitters BEFORE reporting
+
+Before ever reporting orphan inbound (even a "first sighting"), rule out that the
+threads are **demo/seed corpus, not live site traffic.** Verified 2026-08-13 on a
+mail-poll run:
+
+- `GET /api/projects` → `[]`, `FIELDCLAW_PROJECT_ID` empty, DB 0 across all tables
+  (genuine teardown/empty state).
+- One AgentMail inbox `fc-my-site8506@agentmail.to` held 22 `received`/`unread`
+  threads, all WCRWWTF/Wilbarger Creek documents from one sender.
+- Every attachment filename exactly matched files already present and documented in
+  the project KB at `kb/samples/wilbarger/` — enumerated in `SOURCES.md` (labeled
+  "public sample demo corpus … for FieldClaw demo / wiki seed") and `CHANDRA_PROBE.md`.
+- The inbox was deliberately populated by the project's own seed emitter:
+  `sim/emitters/wilbarger_mail_seed.py --to fc-my-site8506@agentmail.to`.
+
+**Classification:** when orphan `received`/`unread` threads are all from one sender,
+all their attachments are already present in the KB `samples/<corpus>/` directory,
+and a seed-emitter script references that exact inbox — those messages are
+self-seeded demo data, NOT genuine site/supplier/EHS/quality traffic. The correct
+call is `[SILENT]` even on the FIRST sighting (the "report-once" orphan rule exists
+to surface *real* unroutable inbound, not to re-surface the project's own fixture
+corpus). Reporting 22 already-known seeded PDFs with no project to route to is
+notification spam.
+
+**How to verify cheaply (all read-only, filesystem tools):**
+1. `search_files(target='files')` for `samples/` under the KB root (`$FIELDCLAW_KB_DIR`)
+   and list the corpus files.
+2. Read `SOURCES.md` / `*.md` probe notes in that corpus dir — they usually label it
+   as public/demo/seed data and enumerate every file.
+3. `find` for the seed emitter (`sim/emitters/*_mail_seed.py`) and confirm `--to
+   <inbox_email>` matches the polled inbox.
+
+If all three line up, `[SILENT]`. Do NOT invent a project id, POST `email.*` events to
+a fabricated project, or claim wiki updates — same fabrication bans as the orphan rule.
+
 ## Orphan-inbound threads get a dedup rule too: report the FIRST sighting, [SILENT] on unchanged repeats
 
 The report-once rule above fires on the FIRST time a `received`/`unread` thread
@@ -153,8 +190,8 @@ route" (that premise would wrongly report it again).
 
 ## Silent exit
 
-When all inboxes have no new inbound (all "sent", or already processed, or
-already-surfaced orphan repeats): respond with exactly `[SILENT]`.
+When all inboxes have no new inbound (all "sent", already processed, already-surfaced
+orphan repeats, OR confirmed self-seeded demo corpus): respond with exactly `[SILENT]`.
 
 ## See also
 

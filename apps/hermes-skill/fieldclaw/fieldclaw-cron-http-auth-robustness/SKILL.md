@@ -1,7 +1,7 @@
 ---
 name: fieldclaw-cron-http-auth-robustness
 description: FieldClaw cron HTTP/mail polling resilience against the shell security filter — batch into a single /tmp Python script instead of inline curl header exports, and the intermittent unexpected-EOF failure that makes export-once unreliable. Complements agentmail-rest-polling and fieldclaw-mail-poll.
-version: 0.1.0
+version: 0.1.1
 ---
 
 # FieldClaw cron HTTP-auth robustness (security-filter-safe polling)
@@ -53,12 +53,54 @@ filter `received`/`unread` only (skip `sent`) → dedup against existing
 `email.inbound` events by `thread_id` → POST `email.inbound` / `email.parsed`
 (+ `schedule.flagged` if delay) → `mail/pull-attachments` for attachments.
 
+## Pitfall: reading the response body twice in the reusable api() helper
+
+When you factor an `api(path, method, body)` helper into the `/tmp` script (the
+recommended shape), read the body into a variable ONCE and return it. Do NOT
+write `json.loads(resp.read().decode()) if resp.read() else None` — the guard
+`if resp.read()` consumes the stream, so the subsequent `.read().decode()` in the
+true-branch returns `b''`, `json.loads` raises on empty input, and the whole call
+falls into the exception handler → you get `status=None` and think the API died
+when it's really a trivial read-twice bug (hit 2026-08-12: "spurious ERR None on
+both verify fetches"). Correct shape:
+
+```python
+with urllib.request.urlopen(req, data=data, timeout=timeout) as resp:
+    raw = resp.read().decode()
+    return resp.status, json.loads(raw) if raw else None
+```
+
+This matters under cron because a `status=None` is easy to misinterpret as
+"API unreachable / project missing" even though `GET /api/projects` returned 200
+moments earlier. If a verification fetch returns None while the main poll worked,
+suspect the read-twice bug before trusting the failure.
+
 ## Silence discipline (verified this run)
 
 When the only inbound message is already processed — `email.inbound`, `email.parsed`,
 `wiki.updated` events exist for its `thread_id` AND the zones from its sitemap are
 already live (`GET /zones` returns the expected 6) — respond exactly `[SILENT]`.
 Do not re-post duplicate events.
+
+### Two-pass confirm before `[SILENT]` (proven 2026-08-12)
+
+`new_processed=0` in the poll is NOT by itself proof of "nothing new" — the message
+fetch could have silently returned empty *and* you'd still get `0`. Before suppressing,
+run a lightweight second-pass verification that proves the poll actually reached and
+read the data:
+
+1. **Per-inbox label counts**: list every mapped inbox's messages and print the label
+   histogram (`received=N, unread=N, sent=N, total=N`). You want to see the `received`/
+   `unread` inbound traffic you expect.
+2. **Thread already-logged check**: for each `received`/`unread` message, fetch the
+   project's `/events` and confirm its `thread_id` already carries `email.inbound` /
+   `email.parsed` (add `wiki.updated` when the inbound was a sitemap).
+
+Only once you have both — the inbound is present AND its thread is genuinely logged —
+respond exactly `[SILENT]`. This is what turns "nothing reported" from a guess into a
+verified fact, and it also detects a bogus empty fetch (would show zero inbound labels,
+not an already-processed thread). The second pass is cheap (GET-only) and can live in
+the same `/tmp/` script as the poll or a small companion script.
 
 ## See also
 
