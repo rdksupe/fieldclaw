@@ -2,10 +2,12 @@
 
 **Ground truth in. Decisions out.**
 
-FieldClaw is the on-site brain for a construction job. Foremen report from Telegram, mail and PDFs land in a project knowledge base, and the superintendent gets a live ops picture — zones, shortages, log, wiki — with answers that can go back to the field. It runs on [Hermes](https://github.com/NousResearch/hermes-agent) plus a small FieldClaw API and web UI.
+FieldClaw is the brain for what is actually happening on a construction site. Foremen report from Telegram, documents and mail get into a project knowledge base, and the superintendent sees a live picture of zones, shortages, the log, and the wiki — then can send decisions back to the field.
+
+It is built on [Hermes](https://github.com/NousResearch/hermes-agent). We did not replace Hermes. We extended it with FieldClaw skills, two role profiles (Supervisor and Foreman), a small HTTP API, and a web UI.
 
 Pitch deck: [`deck/FieldClaw_Pitch_Deck.pdf`](deck/FieldClaw_Pitch_Deck.pdf)  
-Hermes install notes: [`deploy/hermes/README.md`](deploy/hermes/README.md)
+Hermes setup: [`deploy/hermes/README.md`](deploy/hermes/README.md)
 
 ---
 
@@ -13,79 +15,171 @@ Hermes install notes: [`deploy/hermes/README.md`](deploy/hermes/README.md)
 
 ![FieldClaw architecture](docs/diagrams/fieldclaw-architecture.png)
 
-Hand-drawn with the same **rough.js + Kalam** pipeline as the pitch deck (`deck/render-diagrams.mjs`). Regenerate with:
+Same hand style as the pitch deck (rough.js + Kalam). Regenerate with:
 
 ```bash
 cd deck && node ../docs/diagrams/render-architecture.mjs
 ```
 
-People and documents come in on the left (Telegram + mail). Hermes sits in the middle as two roles — Supervisor and Foreman — that share FieldClaw skills but keep separate bots, memories, and personalities. On the right, FieldClaw stores structured site state and a per-project markdown wiki the UI reads at `http://127.0.0.1:8000/`. The footer is intentional: LLM, mail, OCR, STT/TTS, and memory providers are plugs — swap them in env/config; the contracts that matter are the API, the wiki, and the skills.
+---
+
+## Introduction
+
+On a real job, field knowledge lives in heads and chat threads. Office knowledge lives in inboxes. The superintendent sits in the middle and still waits for truth. FieldClaw closes that loop: capture → structure → live ops picture → human decision → answer back to the crew.
+
+We keep two kinds of memory on purpose. Structured things (zones, tasks, people, events) go through the FieldClaw API. Long-form site knowledge (POs, RFIs, PDF outlines, safety notes) lives in a folder wiki per project. Agents and humans can both open those files with normal tools.
 
 ---
 
-## The knowledge base (Karpathy LLM wiki)
+## The various components
 
-Site memory is not a vector database. It follows Andrej Karpathy’s **LLM wiki** idea: keep raw sources on disk, let the agent compile and maintain a real markdown wiki, and navigate with an index instead of embeddings.
+| Piece | What it does |
+|-------|----------------|
+| **FieldClaw API** | Projects, zones, events, tasks, people, pairing, wiki ingest, sitemap import |
+| **Web UI** (`:8000`) | Ops map, kanban, wiki pages, maps gallery, PDF/photo viewer, crew pairing |
+| **Hermes Supervisor** | Superintendent bot, `/init`, mail, cron, notify |
+| **Hermes Foreman** | Separate bot for field capture and proofs |
+| **Project wiki** | `kb/projects/{id}/raw/` + `wiki/` (Karpathy-style LLM wiki) |
+| **Skills pack** | `apps/hermes-skill/fieldclaw/` — shared by both roles |
 
-Read the original pattern here: [llm-wiki.md (Karpathy gist)](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).
+Start everything locally with:
 
-In FieldClaw that looks like this per project:
-
+```bash
+./scripts/start_fieldclaw.sh
+# UI → http://127.0.0.1:8000/
 ```
-kb/projects/{project_id}/
-  raw/     # originals: PDFs, extracts, attachments (don’t invent facts here)
-  wiki/    # agent-maintained pages the UI and Hermes both read
-    index.md
-    ops/ zones/ people/ sources/ maps/ …
-```
-
-When a PDF or email attachment arrives, it goes into `raw/`, then Hermes (or the ingest API) updates wiki pages and `index.md`. To answer a question, the agent opens the index, follows `[[links]]`, and greps the tree — same workflow Karpathy describes, scoped to one construction site so jobs never mix.
-
-Large PDFs also get a **PageIndex** tree (structure) plus OCR text (we use Datalab today; that’s replaceable). Folders are created during Supervisor **`/init`**, not hardcoded by the API, so each site can grow the taxonomy it actually needs.
 
 ---
 
-## Features, step by step
+## API design
 
-### 1. Create a project and open the UI
+The API is the system of record for structured site state. Hermes never invents zone geometry or task status in chat alone — it calls HTTP.
 
-Run `./scripts/start_fieldclaw.sh`, open `http://127.0.0.1:8000/`, and create a project in onboard. You can attach an existing mailbox address or let provisioning create one. **Reset cache** clears sticky browser project ids if you wiped the DB.
+Typical surface (all need `X-API-Key`; Telegram turns also send `X-Actor-Telegram`):
 
-### 2. Pair Supervisor and Foreman
+- `GET/POST /api/projects` — create and list sites (optional existing inbox email)
+- `GET/POST .../zones`, `.../events`, `.../tasks`, `.../people`
+- `GET .../super-queue` — things waiting on the superintendent
+- `POST .../sitemap` / `.../sitemap/upload` — GeoJSON or site-plan PDF/PNG → zones
+- `POST .../mail/pull-attachments` — pull inbox files into the wiki
+- `GET .../wiki/pages`, `.../wiki/assets`, `.../wiki/file/...` — browse and render docs
+- `GET/PUT .../ui/widgets` — optional map chips / callouts on the dashboard
 
-DM the superintendent bot → paste the pairing code in the UI. Foremen use a **different** bot (separate Hermes profile). People are stored as `superintendent` / `foreman` with their Telegram ids, so the API knows who can do what.
+Status events mirror into `wiki/ops/log.md`. Photos go through `POST .../proofs` into `wiki/media/`. Wiki folders are **not** hardcoded at project create — Supervisor `/init` (or ingest) creates them, and the API discovers what exists.
 
-### 3. Bootstrap the site with `/init`
+More detail: `apps/hermes-skill/fieldclaw/tools_http.md`.
 
-In Telegram, run **`/init`**. Supervisor scaffolds the wiki folders, pulls recent mail attachments, tries to import a site map, and reports what’s ready. This is the “from scratch” path so you don’t hand-build the KB.
+---
 
-### 4. Map the site (zones)
+## Hermes extensions
 
-Import GeoJSON, or a site-plan PDF/PNG whose filename looks like `sitemap` / `site-plan` / `zone-map`, or ask the super for area names and `POST` zones. The Ops map and Wiki → **Maps** only count as live when the **API** has polygons — wiki pages alone don’t count.
+Out of the box Hermes is a general agent. FieldClaw adds a full skill pack under `apps/hermes-skill/fieldclaw/`:
 
-### 5. Field reports from Telegram
+- **`/init`** — bootstrap a project from scratch (folders, mail pull, map import, short report back)
+- Site setup / GeoJSON / site-plan OCR import
+- Mail poll and multi-project inbox routing
+- Cron helpers (shortages, supplier delays, mail, daily report) with transport notes
+- Notify delivery discipline (only log success when Telegram actually delivered)
+- `wiki_fs.py` for ingest / PageIndex / scaffold
 
-Foreman texts (and optionally photos) a status, shortage, safety, or quality note. Hermes posts an event to FieldClaw, the API appends `wiki/ops/log.md`, the item shows on the super-queue, and Supervisor can notify the superintendent. Photos must be uploaded into `wiki/media/` (they’re not saved automatically from Telegram).
+We also ship identity templates (`SOUL.md`, `SOUL.foreman.md`), a provision script for the foreman profile, and `./scripts/start_fieldclaw.sh` so API + gateway come up together.
 
-### 6. Mail and documents
+You still get normal Hermes behavior: gateway, pairing, cron, tools, model config, Mem0 hooks, and so on. FieldClaw sits on top; it does not lock you out of the rest of Hermes.
 
-Inbound project mail is polled into events + wiki ingest. PDFs show under Wiki → **PDFs & photos**; OCR outlines land under `sources/`. Multi-project setups route by inbox → project id (don’t trust a stale env project id).
+---
 
-### 7. Voice (optional)
+## Separation at the Hermes layer
 
-Voice notes can go through STT; replies can use TTS. Today that’s wired for smallest.ai; point the same skill scripts at another provider if you prefer.
+Superintendent and foreman are **two Hermes profiles**, not one bot with two moods.
 
-### 8. Cron / watchers
+| | Supervisor Claw | Foreman Claw |
+|--|-----------------|--------------|
+| Home | `~/.hermes-fieldclaw` | `~/.hermes-fc-foreman` |
+| Bot | Superintendent Telegram token | Separate foreman token |
+| Users | Superintendent | Many foremen (keyed by Telegram user id) |
+| Skills | Same FieldClaw pack | Same FieldClaw pack |
 
-On the Supervisor profile: shortage escalation, supplier-delay checks, mail poll, daily report, supplier check-in. Skills encode the hard parts (dedup, which HTTP transport works where, don’t escalate the wrong project).
+They share skills so tools and wiki rules stay consistent. They do **not** share SOUL, session space, pairing allowlist, or Mem0 bucket. The API stores `people.telegram_id` + role so a foreman cannot act as superintendent by accident.
 
-### 9. Multi-project
+This matters because an early mistake was binding one Telegram id onto every new project and sharing one inbox across projects. The UI then stuck on an empty site while another project had the real map. We fixed that with blank-slate wipes, no demo hardcoding in the UI, inbox chosen at create time, resolve-by-project (not “newest wins”), and explicit `/init`.
 
-Many projects, each with its own `kb/projects/{id}/` and usually its own inbox. Skills list projects, match mail by inbox, and dedup threads by id so one shared inbox mistake doesn’t poison every job.
+---
 
-### 10. Demo corpus (Wilbarger)
+## Memory, STT / TTS, and demo data
 
-For a real-looking demo we pulled public Wilbarger Creek RWWTF bid docs (Legistar/Granicus), split big PDFs for mail limits, built zone GeoJSON from the process areas, and seeded mail into a demo inbox. Notes: `kb/samples/wilbarger/SOURCES.md` and `kb/samples/sitemaps/wilbarger-rwwtf-zones.geojson`. Foreman “pulse” seeding stays opt-in.
+**Personal memory (Mem0)** — per Telegram user. Do not set a global `MEM0_USER_ID` or everyone shares one brain. This is for prefs and personal notes, not the site logbook.
+
+**Site memory** — the project wiki + API events (see next section). That is the shared job memory.
+
+**STT / TTS** — optional. Voice notes can go through speech-to-text; replies can use TTS. We wired smallest.ai scripts next to the skills; you can point the same hooks at another provider.
+
+**Demo / simulation data** — under `sim/` and `kb/samples/`. For a credible demo we used public **Wilbarger Creek RWWTF** bid docs (Legistar / Granicus), split large PDFs for mail size limits, built zone GeoJSON from process areas, and seeded mail into a demo inbox. See `kb/samples/wilbarger/SOURCES.md` and `kb/samples/sitemaps/wilbarger-rwwtf-zones.geojson`. Eval replay JSONL is for operators only — live Telegram SOUL rules say not to talk about simulation on site channels. Foreman “pulse” seeding stays opt-in.
+
+---
+
+## Knowledge base (Karpathy) and why vectorless RAG
+
+We follow Andrej Karpathy’s **LLM wiki** pattern instead of default embedding RAG.
+
+Original write-up: [llm-wiki.md (gist)](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).
+
+Idea in plain terms: keep **raw** sources immutable, let the agent **compile** a real markdown wiki (`index.md`, entity pages, links), and at question time walk the index and pages — compile once, keep current — instead of re-deriving everything from chunks every query.
+
+Per project:
+
+```
+kb/projects/{id}/
+  raw/     originals (PDFs, extracts)
+  wiki/    agent-maintained pages (ops, zones, sources, maps, …)
+```
+
+**Why vectorless here:** site facts must stay readable by a human super, editable without re-embedding, and isolated per job so one site’s POs never bleed into another. Vector search hides provenance and mixes tenants too easily. Hermes uses `ls` / `rg` / `cat` on the wiki. Large PDFs can also get a PageIndex tree for structure; OCR text comes from whatever convert service you configure (Datalab today).
+
+Folders are created by `/init` or on ingest — the API does not force a fixed A/B/C layout.
+
+---
+
+## Mail integration
+
+Each project can have its own inbox address. Hermes (or cron) polls mail, posts `email.inbound` / `email.parsed`, and pulls attachments into the wiki. Files named like `sitemap` / `site-plan` can also drive zone import.
+
+Multi-project rule: map `inbox_email` → `project_id` from `GET /api/projects`. Do not trust a stale env project id. Dedup on thread ids so the same message is not processed forever. One inbox shared by two projects will confuse routing — prefer one inbox per project.
+
+We used AgentMail (`*.agentmail.to`) while building. That is a default, not a hard requirement — see swap section below.
+
+---
+
+## Security measures
+
+A few practical locks:
+
+- **API key** on FieldClaw HTTP (`X-API-Key`). Optional **actor Telegram id** for role checks.
+- **Pairing** — Telegram users must be approved before they act as super or foreman.
+- **Role separation** — separate bots + `people.role` so field users are not treated as superintendent.
+- **Project isolation** — each site has its own `kb/projects/{id}/`.
+- **`protect-identity` plugin** (`deploy/hermes/plugins/protect-identity`) — blocks the agent from rewriting `SOUL.md`, `config.yaml`, or `.env` under Hermes home. Personality and secrets stay operator-owned.
+- **Honesty rules in skills / SOUL** — don’t log notify success without delivery proof; don’t invent site facts; don’t discuss sim on live channels.
+
+---
+
+## Swapping services and customizing Hermes
+
+Nothing in the vendor column is the product core. Change what you like in `.env` and Hermes config. Standard Hermes features (gateway, pairing, cron, tools, model routing) remain.
+
+| Concern | Default we used | Swap how |
+|---------|-----------------|----------|
+| Chat model | OpenRouter / Hermes model config | Hermes model settings |
+| Project email | AgentMail | Adapt the mail poll skill to your mailbox API |
+| PDF / image OCR | Datalab | Swap the convert client; keep ingest paths |
+| Large PDF structure | PageIndex | Optional |
+| STT / TTS | smallest.ai | Point the skill scripts at another provider |
+| Personal memory | Mem0 | Or turn off / replace; never force one global user id |
+| DB | SQLite | Change API storage later; keep the HTTP shape |
+| Chat transport | Telegram | Pairing + people table are the hooks |
+
+What you usually keep: FieldClaw API contracts, per-project wiki layout, FieldClaw skill pack, Supervisor / Foreman separation.
+
+Customize SOUL, cron schedules, which skills are enabled, inbox mapping, and `/init` behavior however you want for your site. Hermes stays Hermes — FieldClaw is the construction layer on top.
 
 ---
 
@@ -93,50 +187,12 @@ For a real-looking demo we pulled public Wilbarger Creek RWWTF bid docs (Legista
 
 ```bash
 ./scripts/start_fieldclaw.sh
-# UI → http://127.0.0.1:8000/
-# logs → /tmp/fieldclaw/
 ```
 
-API only: `cd apps/api && uv sync && uv run uvicorn fieldclaw_api.main:app --host 127.0.0.1 --port 8000`  
-Full Hermes/Telegram setup: [`deploy/hermes/README.md`](deploy/hermes/README.md)
+1. Open `http://127.0.0.1:8000/` and create a project (optional: paste an existing inbox).
+2. Pair Supervisor Telegram.
+3. DM Supervisor and run **`/init`**.
+4. Pair Foreman on the other bot when you are ready.
+5. Use **Reset cache** in the UI if the browser still points at a deleted project.
 
----
-
-## Repo layout
-
-| Path | What |
-|------|------|
-| `apps/api/` | Logbook API |
-| `apps/web/` | Dashboard |
-| `apps/hermes-skill/fieldclaw/` | Skills (`/init`, mail, sitemap, cron, …) |
-| `deploy/hermes/` | Profiles, env example, provision script |
-| `scripts/start_fieldclaw.sh` | API + gateway |
-| `kb/samples/` | Demo GeoJSON + corpus index |
-| `deck/` | Pitch PDF |
-| `docs/diagrams/` | Architecture drawing (rough.js + Kalam, pitch-deck style) |
-
----
-
-## Services (swappable)
-
-These are the defaults we used while building. None of them are the product core — change providers in `.env` / Hermes config when you need to.
-
-| Concern | Default in this repo | Notes |
-|---------|----------------------|--------|
-| Agent runtime | Hermes | Skills + gateway; keep the FieldClaw skill pack |
-| Chat LLM | OpenRouter (or whatever Hermes is set to) | Drop-in via Hermes model config |
-| Project email | AgentMail (`*.agentmail.to`) | Any mailbox API works if you adapt the poll skill |
-| PDF / image OCR | Datalab (Chandra-class) | Swap the convert client; keep ingest contracts |
-| Large-PDF structure | PageIndex | Optional; wiki still works without it |
-| STT / TTS | smallest.ai | Optional; scripts under the skill tree |
-| Personal memory | Mem0 (per Telegram user) | Don’t set a global `MEM0_USER_ID` |
-| Structured store | SQLite via FastAPI | Can move DB URL later; API shape matters more |
-| Transport | Telegram | Pairing + people table are the integration points |
-
-FieldClaw’s stable surface is: **HTTP logbook**, **per-project wiki**, **role-aware Telegram skills**, and **honest notify/ingest**. Everything in the table above is plumbing.
-
----
-
-## Honesty
-
-Don’t log “notified” unless Telegram actually delivered. Don’t claim the wiki updated unless ingest succeeded. Don’t invent POs, zones, or people. Don’t discuss sim/replay on live site chats.
+Full Hermes/Telegram steps: [`deploy/hermes/README.md`](deploy/hermes/README.md)
