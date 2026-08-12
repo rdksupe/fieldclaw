@@ -1,27 +1,33 @@
-"""Single API-key auth + optional Telegram actor role checks."""
+"""API-key or dashboard-session auth + optional Telegram actor role checks."""
 
 from __future__ import annotations
 
-from fastapi import Depends, Header, HTTPException, Query, status
+from fastapi import Cookie, Depends, Header, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from fieldclaw_api.config import settings
 from fieldclaw_api.db import get_db
 from fieldclaw_api.models import Person, Project
+from fieldclaw_api.services import ui_auth
 
 
 def require_api_key(
     x_api_key: str | None = Header(default=None),
     api_key: str | None = Query(default=None),
+    fc_session: str | None = Cookie(default=None),
+    db: Session = Depends(get_db),
 ) -> str:
+    """Machines present the API key; browsers present a login cookie."""
     key = (x_api_key or api_key or "").strip()
     expected = (settings.fieldclaw_api_key or "").strip()
-    if not expected or key != expected:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or missing X-API-Key",
-        )
-    return key
+    if expected and key == expected:
+        return key
+    if ui_auth.get_session(db, fc_session):
+        return "session"
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Sign in to the dashboard, or send a valid X-API-Key",
+    )
 
 
 # Back-compat alias

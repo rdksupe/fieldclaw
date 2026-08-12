@@ -2,11 +2,27 @@
 
 from __future__ import annotations
 
+import json
 import os
 import sys
 from pathlib import Path
 
 from fieldclaw_api.config import settings
+
+
+def _repair_store_files() -> None:
+    """PairingStore keys its state by id and calls .items() on it, so a file
+    holding a JSON list raises AttributeError on every read. Reset those to {}.
+    """
+    pairing_dir = Path(settings.hermes_home) / "pairing"
+    if not pairing_dir.is_dir():
+        return
+    for path in pairing_dir.glob("*.json"):
+        try:
+            if not isinstance(json.loads(path.read_text(encoding="utf-8")), dict):
+                path.write_text("{}", encoding="utf-8")
+        except (json.JSONDecodeError, OSError):
+            continue
 
 
 def _pairing_store():
@@ -16,6 +32,7 @@ def _pairing_store():
         sys.path.insert(0, str(hermes_root))
     from gateway.pairing import PairingStore  # type: ignore
 
+    _repair_store_files()
     return PairingStore()
 
 

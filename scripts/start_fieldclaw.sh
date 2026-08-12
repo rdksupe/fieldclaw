@@ -91,6 +91,10 @@ if [[ "$START_API" -eq 1 ]]; then
   done
   echo "  UI  → http://${HOST}:${PORT}/"
   echo "  log → $API_LOG  (pid $API_PID)"
+  PW_FILE="$REPO/data/ui_password.txt"
+  if [[ -f "$PW_FILE" ]]; then
+    echo "  password → $(cat "$PW_FILE")   (delete $PW_FILE to rotate)"
+  fi
 fi
 
 if [[ "$START_GW" -eq 1 ]]; then

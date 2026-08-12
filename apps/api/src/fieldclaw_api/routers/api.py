@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, UploadFile
+from fastapi.responses import FileResponse, Response
 from sqlalchemy.orm import Session
 
 from fieldclaw_api.auth import (
@@ -960,3 +961,55 @@ def mail_pull_attachments(
         return wiki_svc.ingest_inbox_attachments(db, project.id)
     except Exception as e:
         raise HTTPException(400, str(e)) from e
+
+
+@router.get("/projects/{project_id}/cameras")
+def list_cameras(project: Project = Depends(get_project_or_404)):
+    """Wilbarger OxBlue views — only the wastewater demo inbox."""
+    from fieldclaw_api.services import oxblue
+
+    if not oxblue.project_has_cameras(project.inbox_email):
+        return {"site": None, "mode": None, "cameras": []}
+    try:
+        cams = oxblue.list_site_cameras()
+    except Exception as e:
+        raise HTTPException(502, f"oxblue: {e}") from e
+    for cam in cams:
+        cam["still_url"] = f"/api/projects/{project.id}/cameras/{cam['id']}/still"
+        cam["video_url"] = f"/api/projects/{project.id}/cameras/{cam['id']}/video"
+    return {
+        "site": oxblue._site_match(),
+        "mode": "timelapse-loop",
+        "inbox": project.inbox_email,
+        "cameras": cams,
+    }
+
+
+@router.get("/projects/{project_id}/cameras/{cam_id}/still")
+def camera_still(cam_id: str, project: Project = Depends(get_project_or_404)):
+    from fieldclaw_api.services import oxblue
+
+    if not oxblue.project_has_cameras(project.inbox_email):
+        raise HTTPException(404, "cameras not enabled for this project")
+    try:
+        data, media = oxblue.fetch_still(cam_id)
+    except KeyError as e:
+        raise HTTPException(404, "camera not found") from e
+    except Exception as e:
+        raise HTTPException(502, f"oxblue still: {e}") from e
+    return Response(content=data, media_type=media)
+
+
+@router.get("/projects/{project_id}/cameras/{cam_id}/video")
+def camera_video(cam_id: str, project: Project = Depends(get_project_or_404)):
+    from fieldclaw_api.services import oxblue
+
+    if not oxblue.project_has_cameras(project.inbox_email):
+        raise HTTPException(404, "cameras not enabled for this project")
+    try:
+        path = oxblue.cached_movie_path(cam_id)
+    except KeyError as e:
+        raise HTTPException(404, "camera not found") from e
+    except Exception as e:
+        raise HTTPException(502, f"oxblue video: {e}") from e
+    return FileResponse(path, media_type="video/mp4")

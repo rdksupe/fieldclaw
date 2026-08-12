@@ -124,6 +124,22 @@ class MailMessage(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 
+class UiSession(Base):
+    """Browser login. Holds the selected project so it follows the session
+    rather than whichever machine the dashboard was last opened on."""
+
+    __tablename__ = "ui_sessions"
+
+    token: Mapped[str] = mapped_column(String, primary_key=True)
+    project_id: Mapped[str | None] = mapped_column(
+        ForeignKey("projects.id"), nullable=True
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    last_seen_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_now
+    )
+
+
 class SimRun(Base):
     __tablename__ = "sim_runs"
 

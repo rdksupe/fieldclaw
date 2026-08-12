@@ -13,6 +13,7 @@ apps/api/.venv/
 apps/api/.env
 sim/.env.sim
 data/*.db
+data/ui_password.txt
 data/proofs/*
 !data/proofs/.gitkeep
 kb/projects/

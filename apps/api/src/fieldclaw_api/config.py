@@ -41,5 +41,10 @@ class Settings(BaseSettings):
     openrouter_vlm_model: str | None = None
     smallest_api_key: str | None = None
 
+    # OxBlue openlink (SPA app id is public; override if OxBlue issues a partner id)
+    oxblue_app_id: str | None = None
+    oxblue_openlink: str = "apidemo"
+    oxblue_site_match: str = "Wilbarger"
+
 
 settings = Settings()

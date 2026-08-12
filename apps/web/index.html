@@ -243,16 +243,77 @@
     .modal .hint { font-size: 0.78rem; color: #78716c; white-space: pre-wrap; margin: 0.4rem 0; }
     .modal input { flex: 1; min-width: 8rem; }
     .hidden { display: none !important; }
+    .cam-wall {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem;
+      padding: 0.5rem 1.5rem 1.5rem;
+    }
+    @media (max-width: 800px) { .cam-wall { grid-template-columns: 1fr; } }
+    .cam-tile {
+      position: relative; background: #0c0a09; border: 1px solid #292524;
+      aspect-ratio: 4 / 3; overflow: hidden;
+    }
+    .cam-tile img, .cam-tile video {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: contrast(1.05) saturate(0.92);
+    }
+    .cam-tile video { position: absolute; inset: 0; }
+    .cam-chrome {
+      position: absolute; left: 0; right: 0; top: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.4rem 0.55rem;
+      background: linear-gradient(180deg, rgba(0,0,0,0.72), transparent);
+      font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; color: #e7e5e4;
+      letter-spacing: 0.04em; z-index: 2;
+    }
+    .cam-live {
+      color: #fca5a5; font-weight: 500;
+    }
+    .cam-live::before {
+      content: ""; display: inline-block; width: 0.45rem; height: 0.45rem;
+      background: #ef4444; border-radius: 50%; margin-right: 0.35rem;
+      box-shadow: 0 0 0 0 rgba(239,68,68,0.7);
+      animation: camPulse 1.6s ease-out infinite;
+    }
+    .cam-foot {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 0.4rem 0.55rem;
+      background: linear-gradient(0deg, rgba(0,0,0,0.78), transparent);
+      font-family: "IBM Plex Mono", monospace; font-size: 0.65rem; color: #d6d3d1;
+      z-index: 2;
+    }
+    @keyframes camPulse {
+      0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.55); }
+      70% { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+      100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cam-live::before { animation: none; }
+    }
+    .cam-note {
+      margin: 0 1.5rem 0.4rem; color: var(--muted); font-size: 0.82rem;
+    }
     @media (prefers-reduced-motion: reduce) {
       .zone { transition: none; }
     }
   </style>
 </head>
 <body>
+  <div id="login" class="overlay hidden">
+    <div class="modal">
+      <h1>Sign in to FieldClaw</h1>
+      <p class="sub">Enter your site password.</p>
+      <div class="row">
+        <input id="loginPassword" type="password" placeholder="Password" style="flex:1" />
+        <button id="btnLogin">Sign in</button>
+      </div>
+      <div class="hint" id="loginOut"></div>
+    </div>
+  </div>
+
   <div id="onboard" class="overlay hidden">
     <div class="modal">
       <h1>Register as site admin</h1>
-      <p class="sub">First-time setup is stored in this browser. Pair Telegram so Hermes knows you’re the superintendent. Zones are mapped later in chat — not a fixed template.</p>
+      <p class="sub">Setup lives on the server, so it follows your login rather than this browser. Pair Telegram so Hermes knows you’re the superintendent. Zones are mapped later in chat — not a fixed template.</p>
       <div class="row">
         <input id="adminName" placeholder="Your name" />
         <input id="adminEmail" placeholder="Email (optional)" />
@@ -289,6 +350,7 @@
 
   <div class="tabs">
     <button class="tab active" data-tab="ops">Ops · Kanban</button>
+    <button class="tab hidden" data-tab="cams">Cams</button>
     <button class="tab" data-tab="wiki">Wiki</button>
     <button class="tab" data-tab="log">Log</button>
     <button class="tab" data-tab="crew">Crew · Pairing</button>
@@ -298,7 +360,7 @@
     <select id="projectSelect"></select>
     <button class="secondary" id="btnRefresh">Refresh</button>
     <button class="secondary" id="btnShowOnboard">Admin / setup</button>
-    <button class="secondary" id="btnResetCache" title="Clear FieldClaw localStorage and reload">Reset cache</button>
+    <button class="secondary" id="btnLogout" title="End this dashboard session">Sign out</button>
     <span id="status"></span>
     <details style="margin-left:auto;font-size:0.85rem">
       <summary style="cursor:pointer;color:#78716c">Eval / replay</summary>
@@ -326,6 +388,11 @@
       <h2>Kanban</h2>
       <div class="board" id="board"></div>
     </div>
+  </section>
+
+  <section id="tab-cams" class="hidden">
+    <p class="cam-note" id="camNote">Wilbarger Creek RWWTF — four site views. Stills refresh; day movie loops so the wall reads live.</p>
+    <div class="cam-wall" id="camGrid"></div>
   </section>
 
   <section id="tab-wiki" class="hidden">
@@ -428,29 +495,11 @@
   </section>
 
   <script>
-    const LS = {
-      key: () => localStorage.getItem("FIELDCLAW_API_KEY") || "dev-key-change-me",
-      projectId: () => localStorage.getItem("FIELDCLAW_PROJECT_ID") || "",
-      setProject: (id) => localStorage.setItem("FIELDCLAW_PROJECT_ID", id),
-      admin: () => {
-        try { return JSON.parse(localStorage.getItem("FIELDCLAW_ADMIN") || "null"); }
-        catch { return null; }
-      },
-      setAdmin: (o) => localStorage.setItem("FIELDCLAW_ADMIN", JSON.stringify(o)),
-      onboarded: () => localStorage.getItem("FIELDCLAW_ONBOARDED") === "1",
-      setOnboarded: () => localStorage.setItem("FIELDCLAW_ONBOARDED", "1"),
-      clear: () => {
-        const keys = [];
-        for (let i = 0; i < localStorage.length; i++) {
-          const k = localStorage.key(i);
-          if (k && k.startsWith("FIELDCLAW_")) keys.push(k);
-        }
-        keys.forEach((k) => localStorage.removeItem(k));
-      },
-    };
-
-    const headers = () => ({ "X-API-Key": LS.key(), "Content-Type": "application/json" });
-    let projectId = LS.projectId();
+    // No client-side credentials or state: the session cookie authenticates every
+    // call and /api/auth/state is the single source of truth for what to show.
+    const headers = () => ({ "Content-Type": "application/json" });
+    let serverState = { authenticated: false, next_step: "login" };
+    let projectId = "";
     let projects = [];
     let zonesById = {};
     let allEvents = [];
@@ -459,17 +508,119 @@
     let currentWikiPath = "";
     let currentWikiView = "pages";
     let currentAssetKey = "";
+    const WASTEWATER_INBOX = "fc-my-site8506@agentmail.to";
     const COLS = [["todo","Todo"],["in_progress","In progress"],["blocked","Blocked"],["done","Done"]];
     const setStatus = (t) => { document.getElementById("status").textContent = t; };
 
     async function api(path, opts = {}) {
-      const r = await fetch(path, { ...opts, headers: { ...headers(), ...(opts.headers || {}) } });
+      const r = await fetch(path, {
+        credentials: "same-origin",
+        ...opts,
+        headers: { ...headers(), ...(opts.headers || {}) },
+      });
+      if (r.status === 401) {
+        // Stops the background poll too, otherwise it 401s every 4s forever.
+        serverState = { authenticated: false, next_step: "login" };
+        showLogin();
+        throw new Error("signed out");
+      }
       if (!r.ok) throw new Error(await r.text());
       return r.json();
     }
 
+    async function loadState() {
+      serverState = await api("/api/auth/state");
+      projects = serverState.projects || [];
+      projectId = serverState.project_id || "";
+      return serverState;
+    }
+
+    let camClock = null;
+    let camBuilt = false;
+
+    function currentProject() {
+      return projects.find((p) => p.id === projectId) || null;
+    }
+
+    function isWastewaterProject() {
+      const inbox = (currentProject()?.inbox_email || "").trim().toLowerCase();
+      return inbox === WASTEWATER_INBOX;
+    }
+
+    function syncCamTab() {
+      const btn = document.querySelector('.tabs .tab[data-tab="cams"]');
+      const on = isWastewaterProject();
+      if (btn) btn.classList.toggle("hidden", !on);
+      if (!on) {
+        stopCamWall();
+        if (!document.getElementById("tab-cams").classList.contains("hidden")) {
+          showTab("ops");
+        }
+      }
+    }
+
+    function stopCamWall() {
+      if (camClock) { clearInterval(camClock); camClock = null; }
+    }
+
+    function tickCamClocks() {
+      const now = new Date().toLocaleTimeString([], { hour12: false });
+      document.querySelectorAll(".cam-now").forEach((el) => { el.textContent = now; });
+    }
+
+    async function startCamWall() {
+      if (!isWastewaterProject()) { syncCamTab(); return; }
+      stopCamWall();
+      tickCamClocks();
+      camClock = setInterval(tickCamClocks, 1000);
+      const grid = document.getElementById("camGrid");
+      const note = document.getElementById("camNote");
+      if (!camBuilt) {
+        grid.innerHTML = "<div style='color:#78716c;font-size:0.9rem'>Opening site cameras…</div>";
+      }
+      try {
+        const data = await api(`/api/projects/${projectId}/cameras`);
+        const cams = data.cameras || [];
+        note.textContent = cams.length
+          ? `Wilbarger Creek RWWTF — ${cams.length} views. Day movie loops; stills are the last OxBlue frame.`
+          : "No Wilbarger cameras returned from OxBlue.";
+        grid.innerHTML = "";
+        for (const cam of cams) {
+          const tile = document.createElement("div");
+          tile.className = "cam-tile";
+          const still = camAuthUrl(cam.still_url) + `&t=${Date.now()}`;
+          const video = camAuthUrl(cam.video_url);
+          tile.innerHTML = `
+            <div class="cam-chrome">
+              <span>${escapeHtml(cam.label || cam.name || "CAM")}</span>
+              <span class="cam-live">LIVE <span class="cam-now"></span></span>
+            </div>
+            <img alt="${escapeHtml(cam.label || "camera")}" src="${still}" />
+            <video muted loop playsinline preload="auto"></video>
+            <div class="cam-foot">last still ${escapeHtml(cam.last_upload || "—")}</div>`;
+          const vid = tile.querySelector("video");
+          vid.dataset.src = video;
+          grid.appendChild(tile);
+        }
+        camBuilt = true;
+        tickCamClocks();
+        // Load day-movies one at a time so the 1 GB host is not hit with 4×28 MB.
+        (async () => {
+          for (const vid of grid.querySelectorAll("video")) {
+            vid.src = vid.dataset.src;
+            await new Promise((res) => {
+              vid.addEventListener("canplay", () => { vid.play().catch(() => {}); res(); }, { once: true });
+              vid.addEventListener("error", res, { once: true });
+            });
+          }
+        })();
+      } catch (e) {
+        note.textContent = String(e);
+      }
+    }
+
     function showTab(name) {
-      ["ops","wiki","log","crew"].forEach((t) => {
+      ["ops","cams","wiki","log","crew"].forEach((t) => {
         document.getElementById(`tab-${t}`).classList.toggle("hidden", t !== name);
       });
       document.querySelectorAll(".tabs .tab").forEach((b) => {
@@ -478,6 +629,11 @@
       if (name === "wiki") refreshWiki();
       if (name === "log") refreshFullLog();
       if (name === "crew") { refreshPairing(); renderLocalProfile(); }
+      if (name === "cams") {
+        if (!isWastewaterProject()) { showTab("ops"); return; }
+        startCamWall();
+      }
+      else stopCamWall();
     }
 
     document.querySelectorAll(".tabs .tab").forEach((b) => {
@@ -496,9 +652,9 @@
       }
       if (!projectId && projects[0]) {
         projectId = projects[0].id;
-        LS.setProject(projectId);
         sel.value = projectId;
       }
+      syncCamTab();
     }
 
     function paintZonesOnto(map, zones) {
@@ -628,11 +784,6 @@
       });
     }
 
-    async function loadProjects() {
-      projects = await api("/api/projects");
-      renderProjectSelect();
-    }
-
     function renderUiWidgets(widgets) {
       const box = document.getElementById("mapExtras");
       if (!box) return;
@@ -675,6 +826,10 @@
       renderUiWidgets(ui.widgets || []);
       document.getElementById("projectMeta").textContent =
         `${project.name} · ${(project.inbox_email||"no-inbox")} · ${projectId.slice(0,8)}…`;
+      const idx = projects.findIndex((p) => p.id === project.id);
+      if (idx >= 0) projects[idx] = { ...projects[idx], ...project };
+      else projects.push(project);
+      syncCamTab();
       if (!document.getElementById("tab-log").classList.contains("hidden")) refreshFullLog();
     }
 
@@ -771,7 +926,7 @@
         if (srcAttr.startsWith("../")) rel = srcAttr.replace(/^\.\.\//, "");
         else if (!srcAttr.includes("/") && dir) rel = `${dir}/${srcAttr}`;
         else if (srcAttr.startsWith("./")) rel = dir ? `${dir}/${srcAttr.slice(2)}` : srcAttr.slice(2);
-        img.src = `/api/projects/${projectId}/wiki/file/${rel.split("/").map(encodeURIComponent).join("/")}?api_key=${encodeURIComponent(LS.key())}`;
+        img.src = `/api/projects/${projectId}/wiki/file/${rel.split("/").map(encodeURIComponent).join("/")}`;
       });
 
       const back = collectBacklinks(pagePath);
@@ -793,10 +948,9 @@
 
     function assetFileUrl(a) {
       const enc = a.path.split("/").map(encodeURIComponent).join("/");
-      const base = a.root === "raw"
+      return a.root === "raw"
         ? `/api/projects/${projectId}/raw/file/${enc}`
         : `/api/projects/${projectId}/wiki/file/${enc}`;
-      return `${base}?api_key=${encodeURIComponent(LS.key())}`;
     }
 
     function assetKey(a) {
@@ -1022,54 +1176,103 @@
     }
 
     function renderLocalProfile() {
-      const a = LS.admin();
+      const a = serverState.admin;
       document.getElementById("localProfile").textContent = a
-        ? `admin=${a.name}\nproject=${a.projectId||"—"}\ntelegram=${a.telegramId||"unbound"}\nonboarded=${LS.onboarded()}`
-        : "(no local admin profile)";
+        ? `admin=${a.name}\nproject=${projectId||"—"}\ntelegram=${a.telegram_id||"unbound"}\nstep=${serverState.next_step}`
+        : "(no admin registered on this project yet)";
     }
 
-    function showOnboard(force=false) {
-      if (!force && LS.onboarded() && LS.admin()) return;
+    const PROMPTS = {
+      create_project: "No project yet. Name the site and create it — an AgentMail inbox is provisioned unless you paste an existing one.",
+      register_admin: "Project exists but has no superintendent. Save your admin profile to claim it.",
+      pair_telegram: "Admin registered but not bound to Telegram. DM the bot, then paste the pairing code below.",
+      ready: "Setup complete. Everything below is live.",
+    };
+
+    function showLogin() {
+      document.getElementById("onboard").classList.add("hidden");
+      document.getElementById("login").classList.remove("hidden");
+      document.getElementById("loginPassword").focus();
+    }
+    function hideLogin() {
+      document.getElementById("login").classList.add("hidden");
+    }
+
+    function syncOnboardPrompt() {
+      document.getElementById("onboardHint").textContent =
+        PROMPTS[serverState.next_step] || PROMPTS.create_project;
+      // Pairing can be finished later from the Crew tab, so a project is enough
+      // to let someone through to the dashboard.
+      document.getElementById("btnOnboardDone").disabled = !projectId;
+    }
+
+    function showOnboard() {
       document.getElementById("onboard").classList.remove("hidden");
+      syncOnboardPrompt();
       refreshPairing();
     }
     function hideOnboard() {
       document.getElementById("onboard").classList.add("hidden");
     }
 
-    document.getElementById("btnShowOnboard").onclick = () => {
-      document.getElementById("onboard").classList.remove("hidden");
+    // The server decides what is missing; the UI just renders that decision.
+    async function applyState() {
+      await loadState();
+      if (!serverState.authenticated) { showLogin(); return; }
+      hideLogin();
+      renderProjectSelect();
+      renderLocalProfile();
+      if (projectId) await refresh();
+      // Only block on setup that has to happen here. Pairing is reachable from
+      // the Crew tab, so nag in the status line instead of reopening the modal.
+      if (serverState.next_step === "create_project"
+          || serverState.next_step === "register_admin") {
+        showOnboard();
+      } else {
+        hideOnboard();
+        if (serverState.next_step === "pair_telegram") setStatus(PROMPTS.pair_telegram);
+      }
+    }
+
+    document.getElementById("btnLogin").onclick = async () => {
+      const password = document.getElementById("loginPassword").value;
+      const out = document.getElementById("loginOut");
+      out.textContent = "signing in…";
+      try {
+        const r = await fetch("/api/auth/login", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+        });
+        if (!r.ok) { out.textContent = "Wrong password."; return; }
+        document.getElementById("loginPassword").value = "";
+        out.textContent = "";
+        await applyState();
+      } catch (e) {
+        out.textContent = String(e);
+      }
     };
-    document.getElementById("btnResetCache").onclick = () => {
-      if (!confirm("Clear FieldClaw browser cache (project, admin, onboarded) and reload?")) return;
-      LS.clear();
+    document.getElementById("loginPassword").onkeydown = (e) => {
+      if (e.key === "Enter") document.getElementById("btnLogin").click();
+    };
+
+    document.getElementById("btnShowOnboard").onclick = () => showOnboard();
+    document.getElementById("btnLogout").onclick = async () => {
+      await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
       location.reload();
     };
     document.getElementById("btnOnboardSkip").onclick = async () => {
-      await loadProjects();
-      const pick = LS.projectId() && projects.some((p) => p.id === LS.projectId())
-        ? LS.projectId()
-        : (projects[0]?.id || "");
-      if (pick) {
-        projectId = pick;
-        LS.setProject(projectId);
-        const name = document.getElementById("adminName").value.trim() || "Site Admin";
-        LS.setAdmin({
-          name,
-          email: document.getElementById("adminEmail").value.trim() || null,
-          projectId,
-          telegramId: null,
-        });
-        LS.setOnboarded();
-        renderProjectSelect();
-        await refresh();
-        hideOnboard();
-        setStatus("opened " + (projects.find((p) => p.id === projectId)?.name || projectId.slice(0, 8)));
-        document.getElementById("onboardOut").textContent =
-          `Using ${projects.find((p) => p.id === projectId)?.name || projectId}`;
-      } else {
+      await loadState();
+      if (!projects.length) {
         document.getElementById("onboardOut").textContent = "No projects yet — create one.";
+        return;
       }
+      await selectProject(projects[0].id);
+      hideOnboard();
+      setStatus("opened " + (projects.find((p) => p.id === projectId)?.name || projectId.slice(0, 8)));
+      document.getElementById("onboardOut").textContent =
+        `Using ${projects.find((p) => p.id === projectId)?.name || projectId}`;
     };
     document.getElementById("btnOnboardCreate").onclick = async () => {
       const name = document.getElementById("adminName").value.trim() || "Site Admin";
@@ -1089,21 +1292,17 @@
           body: JSON.stringify(body),
         });
         projectId = created.project_id;
-        LS.setProject(projectId);
-        const admin = await api(`/api/projects/${projectId}/admin/register`, {
+        await api(`/api/projects/${projectId}/admin/register`, {
           method: "POST",
           body: JSON.stringify({ name, email }),
         });
-        LS.setAdmin({ name, email, projectId, personId: admin.id, telegramId: admin.telegram_id });
-        await loadProjects();
-        await refresh();
+        await selectProject(projectId);
         document.getElementById("onboardOut").textContent =
           `Project ${projectId.slice(0,8)}\ninbox ${created.inbox_email || inbox || "(none)"}\nwiki ${created.kb_relpath}\n` +
           (inbox
             ? "Reused existing AgentMail inbox — pull attachments or import GeoJSON next.\n"
             : "Zones empty until you map them.\n") +
           "Pair Telegram if the crew tab still shows unbound.";
-        document.getElementById("btnOnboardDone").disabled = false;
         setStatus("admin project ready");
       } catch (e) {
         document.getElementById("onboardOut").textContent = String(e);
@@ -1112,7 +1311,8 @@
     document.getElementById("btnOnboardPair").onclick = async () => {
       if (!projectId) return;
       const code = document.getElementById("adminPairCode").value.trim();
-      const name = document.getElementById("adminName").value.trim() || LS.admin()?.name || "Site Admin";
+      const name = document.getElementById("adminName").value.trim()
+        || serverState.admin?.name || "Site Admin";
       if (!code) return;
       try {
         const data = await api("/api/pairing/approve", {
@@ -1123,31 +1323,38 @@
           }),
         });
         const tid = data.pairing?.user?.user_id || data.bound_person?.telegram_id;
-        const prev = LS.admin() || { name, projectId };
-        LS.setAdmin({ ...prev, telegramId: tid, personId: data.bound_person?.id });
-        LS.setOnboarded();
         document.getElementById("onboardOut").textContent = "Bound admin telegram " + tid;
-        document.getElementById("btnOnboardDone").disabled = false;
-        await refresh();
+        await applyState();
       } catch (e) {
         document.getElementById("onboardOut").textContent = String(e);
       }
     };
     document.getElementById("btnOnboardDone").onclick = () => {
-      LS.setOnboarded();
       hideOnboard();
       showTab("ops");
     };
 
-    document.getElementById("projectSelect").onchange = async (e) => {
-      projectId = e.target.value;
-      LS.setProject(projectId);
+    // Project choice is stored on the session, so it follows the login.
+    async function selectProject(id) {
+      serverState = await api("/api/auth/project", {
+        method: "POST",
+        body: JSON.stringify({ project_id: id }),
+      });
+      projects = serverState.projects || [];
+      projectId = serverState.project_id || "";
       currentWikiPath = "";
+      renderProjectSelect();
+      renderLocalProfile();
+      syncOnboardPrompt();
       await refresh();
+    }
+
+    document.getElementById("projectSelect").onchange = async (e) => {
+      await selectProject(e.target.value);
       if (!document.getElementById("tab-wiki").classList.contains("hidden")) refreshWiki();
       if (!document.getElementById("tab-log").classList.contains("hidden")) refreshFullLog();
     };
-    document.getElementById("btnRefresh").onclick = async () => { await loadProjects(); await refresh(); };
+    document.getElementById("btnRefresh").onclick = async () => { await applyState(); };
     document.getElementById("btnWikiRefresh").onclick = () => refreshWiki();
     document.querySelectorAll("#wikiSubtabs button").forEach((b) => {
       b.onclick = () => showWikiView(b.dataset.wikiView);
@@ -1196,16 +1403,14 @@
         });
         document.getElementById("createOut").textContent =
           `${data.project_id}\n${data.inbox_email}\n${data.kb_relpath}\nzones=dynamic (map in Telegram)\nwiki=${JSON.stringify(data.wiki||{})}`;
-        projectId = data.project_id; LS.setProject(projectId);
-        await loadProjects(); await refresh();
+        await selectProject(data.project_id);
       } catch (e) {
         document.getElementById("createOut").textContent = String(e);
       }
     };
     document.getElementById("btnSeed").onclick = async () => {
       const data = await api("/api/seed", { method: "POST" });
-      projectId = data.project_id; LS.setProject(projectId);
-      await loadProjects(); await refresh();
+      await selectProject(data.project_id);
     };
     document.getElementById("btnReplay").onclick = async () => {
       await api(`/api/sim/kaggle_site/play?project_id=${projectId}&speed=20`, { method: "POST" });
@@ -1225,15 +1430,11 @@
 
     (async () => {
       try {
-        await loadProjects();
-        if (projectId) await refresh();
-        if (!LS.onboarded() || !LS.admin()) showOnboard();
-        else {
-          hideOnboard();
-          renderLocalProfile();
-        }
+        await applyState();
       } catch (e) { setStatus(String(e)); }
-      setInterval(() => { if (projectId) refresh().catch(()=>{}); }, 4000);
+      setInterval(() => {
+        if (serverState.authenticated && projectId) refresh().catch(() => {});
+      }, 4000);
     })();
   </script>
 </body>
