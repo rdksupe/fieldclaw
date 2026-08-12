@@ -13,11 +13,13 @@ Hermes install notes: [`deploy/hermes/README.md`](deploy/hermes/README.md)
 
 ![FieldClaw architecture](docs/diagrams/fieldclaw-architecture.png)
 
-Sources: [Excalidraw](docs/diagrams/fieldclaw-architecture.excalidraw) · [Mermaid](docs/diagrams/fieldclaw-architecture.mmd)
+Hand-drawn with the same **rough.js + Kalam** pipeline as the pitch deck (`deck/render-diagrams.mjs`). Regenerate with:
 
-People and documents come in on the left (Telegram + email). Hermes sits in the middle as two roles — Supervisor and Foreman — that share the same FieldClaw skills but keep separate bots, memories, and personalities. On the right, FieldClaw stores structured site state (zones, tasks, events) and a per-project markdown wiki the UI reads at `http://127.0.0.1:8000/`.
+```bash
+cd deck && node ../docs/diagrams/render-architecture.mjs
+```
 
-Nothing magical about the vendor boxes: chat models, mail, OCR, STT/TTS, and memory providers are plugged in through env/config. Swap them when you want; the product contracts are the API, the wiki layout, and the skills.
+People and documents come in on the left (Telegram + mail). Hermes sits in the middle as two roles — Supervisor and Foreman — that share FieldClaw skills but keep separate bots, memories, and personalities. On the right, FieldClaw stores structured site state and a per-project markdown wiki the UI reads at `http://127.0.0.1:8000/`. The footer is intentional: LLM, mail, OCR, STT/TTS, and memory providers are plugs — swap them in env/config; the contracts that matter are the API, the wiki, and the skills.
 
 ---
 
@@ -111,7 +113,7 @@ Full Hermes/Telegram setup: [`deploy/hermes/README.md`](deploy/hermes/README.md)
 | `scripts/start_fieldclaw.sh` | API + gateway |
 | `kb/samples/` | Demo GeoJSON + corpus index |
 | `deck/` | Pitch PDF |
-| `docs/diagrams/` | Architecture drawing |
+| `docs/diagrams/` | Architecture drawing (rough.js + Kalam, pitch-deck style) |
 
 ---
 
