@@ -108,6 +108,22 @@ hermes-fieldclaw gateway run --replace
 
 Do **not** run a second standalone `gateway start` on the foreman profile while multiplexing is enabled.
 
+### 5. Harden the profile
+
+```bash
+deploy/hermes/harden_profile.sh                        # ~/.hermes-fieldclaw
+deploy/hermes/harden_profile.sh ~/.hermes-fc-foreman   # provision_role.sh already does this
+```
+
+Idempotent, and worth re-running after any manual profile edit. It applies four things a fresh profile gets wrong:
+
+| Fix | Why |
+|-----|-----|
+| Installs `scripts/fc_gate.py` and attaches it to every agent-backed cron job | Hermes runs a job's pre-check script before building the prompt; a last line of `{"wakeAgent": false}` skips the agent entirely. The gate returns that whenever `GET /api/projects` is empty or unreachable, so a site with no project costs nothing instead of running a full agent per tick. When a project does exist, the resolved list is injected as context and the job skips its own resolve call. |
+| Comments out `EMAIL_*` | Those keys enable the Hermes email *chat* adapter, which treats inbound site mail as DMs and auto-replies to it. FieldClaw parses mail through the `mail-poll` cron against the AgentMail REST API instead. |
+| Empties `TELEGRAM_ALLOWED_USERS` | An allowlisted id bypasses pairing. Clearing it makes unknown DMs get a pairing code, which is also the flow you demo. |
+| Moves duplicate top-level skill dirs aside | `skill_manage` can only *create* in the nested `fieldclaw` store, so edits land as a second top-level copy. Cron then fails with `Ambiguous skill name` and refuses to load the skill. Copies are moved to a timestamped backup, not deleted. |
+
 ---
 
 ## Day-to-day start
@@ -184,6 +200,8 @@ When two projects accidentally share one inbox, mail events split across ids and
 | `identity/SOUL.md` | Supervisor voice and scope |
 | `identity/SOUL.foreman.md` | Foreman voice and scope |
 | `provision_role.sh` | Create/link foreman profile |
+| `harden_profile.sh` | Pairing-only DMs, no email chat adapter, cron gated on a live project |
+| `scripts/fc_gate.py` | Cron wake gate — no model call until a project exists |
 | `plugins/protect-identity/` | Lock identity files |
 | `../../apps/hermes-skill/fieldclaw/init/SKILL.md` | `/init` checklist |
 | `../../apps/hermes-skill/fieldclaw/tools_http.md` | HTTP tool surface |

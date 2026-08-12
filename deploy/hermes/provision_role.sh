@@ -129,6 +129,9 @@ chmod +x "$WRAPPER"
 
 ln -sfn "$PROFILE_HOME" "$MUX_HOME/profiles/foreman"
 
+# Pairing-only DMs, no email chat adapter, cron gated on a live project.
+"$REPO/deploy/hermes/harden_profile.sh" "$PROFILE_HOME"
+
 echo ""
 echo "=== Foreman role provisioned ==="
 echo "profile:  $PROFILE_HOME"
