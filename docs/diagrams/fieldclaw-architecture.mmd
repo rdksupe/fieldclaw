@@ -1,0 +1,49 @@
+flowchart TB
+  subgraph Field["Field capture"]
+    FT["Foreman Telegram"]
+    ST["Superintendent Telegram"]
+    AM["AgentMail inbox<br/>*.agentmail.to"]
+  end
+
+  subgraph Hermes["Hermes multiplex"]
+    GW["Gateway<br/>hermes-fieldclaw"]
+    SUP["Supervisor profile<br/>~/.hermes-fieldclaw"]
+    FOR["Foreman profile<br/>~/.hermes-fc-foreman"]
+    SK["Shared FieldClaw skills<br/>/init · mail · sitemap · cron"]
+    MEM["Mem0<br/>per Telegram user id"]
+    STT["smallest.ai STT"]
+    TTS["smallest.ai TTS"]
+  end
+
+  subgraph FC["FieldClaw"]
+    API["FastAPI + SQLite<br/>zones · events · tasks · people"]
+    UI["Web UI :8000<br/>Ops · Wiki · Maps · Docs · Crew"]
+    KB["Project KB<br/>kb/projects/{id}/wiki + raw"]
+    PI["PageIndex trees"]
+    DL["Datalab / Chandra OCR"]
+  end
+
+  FT --> FOR
+  ST --> SUP
+  AM --> SK
+  FOR --> GW
+  SUP --> GW
+  GW --> SK
+  SK --> MEM
+  SK --> STT
+  SK --> TTS
+  SK --> API
+  SK --> KB
+  API --> UI
+  API --> KB
+  SK --> DL
+  DL --> KB
+  SK --> PI
+  PI --> KB
+
+  classDef box fill:#FBFAF7,stroke:#1C1917,color:#1C1917
+  classDef accent fill:#FFF7ED,stroke:#C2410C,color:#1C1917
+  classDef dark fill:#1C1917,stroke:#1C1917,color:#FAFAF9
+  class FT,ST,AM accent
+  class GW,SUP,FOR,SK,MEM,STT,TTS box
+  class API,UI,KB,PI,DL box

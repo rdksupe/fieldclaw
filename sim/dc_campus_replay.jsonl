@@ -1,0 +1,10 @@
+{"t_offset_sec": 0, "zone": "structure", "type": "progress.reported", "payload": {"text": "Civil pad A complete. Mobilizing structural steel package.", "progress_pct": 20, "trade": "civil"}}
+{"t_offset_sec": 3, "zone": "structure", "type": "progress.reported", "payload": {"text": "Zone A: erecting primary steel — 40% of grids set.", "progress_pct": 40, "trade": "steel"}}
+{"t_offset_sec": 6, "zone": "electrical", "type": "progress.reported", "payload": {"text": "Electrical: underground duct bank pull complete to MMS.", "progress_pct": 25, "trade": "electrical"}}
+{"t_offset_sec": 9, "zone": "mechanical", "type": "progress.reported", "payload": {"text": "Mechanical: chiller skid pads poured; waiting on equipment set.", "progress_pct": 30, "trade": "mechanical"}}
+{"t_offset_sec": 12, "zone": "mechanical", "type": "shortage.raised", "payload": {"text": "Short on 4-inch copper fittings for CRAH headers — ~6 hours of work left.", "material": "copper fittings", "urgency": "medium"}}
+{"t_offset_sec": 15, "zone": "electrical", "type": "safety.reported", "payload": {"text": "Near-miss: energized temp panel left unlocked at switchgear yard. Barricaded.", "severity": "near_miss"}}
+{"t_offset_sec": 18, "zone": "white_space", "type": "progress.reported", "payload": {"text": "White space: raised floor pedestals started on hall 1.", "progress_pct": 12, "trade": "fitout"}}
+{"t_offset_sec": 21, "zone": "structure", "type": "quality.reported", "payload": {"text": "Weld inspection failed on grid B3 — rework before decking.", "severity": "ncr"}}
+{"t_offset_sec": 24, "zone": "mechanical", "type": "progress.reported", "payload": {"text": "Chillers 1–2 set on pads. Piping resume after fittings delivery.", "progress_pct": 48, "trade": "mechanical"}}
+{"t_offset_sec": 27, "zone": "electrical", "type": "progress.reported", "payload": {"text": "Switchgear lineup energized for construction power. Cars dense at Building 1–2.", "progress_pct": 55, "trade": "electrical"}}

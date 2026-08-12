@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FieldClaw</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,500;0,7..72,600;1,7..72,500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <style>
+    :root {
+      --stone: #1C1917; --paper: #FBFAF7; --oxide: #C2410C; --amber: #D97706;
+      --green: #15803D; --red: #B91C1C; --grey: #A8A29E; --line: #E7E5E4;
+      --ink: #292524; --muted: #78716c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #fff7ed 0%, transparent 55%),
+        linear-gradient(180deg, #f5f2eb 0%, var(--paper) 40%, #f0ebe3 100%);
+      color: var(--stone); min-height: 100vh;
+    }
+    header {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      flex-wrap: wrap; padding: 1rem 1.5rem; border-bottom: 1px solid var(--line);
+    }
+    .brand { font-weight: 700; font-size: 1.6rem; letter-spacing: -0.03em; }
+    .brand span { color: var(--oxide); }
+    .meta { font-size: 0.8rem; color: #57534e; font-family: "IBM Plex Mono", monospace; }
+    .tabs { display: flex; gap: 0.35rem; margin: 0.75rem 1.5rem 0; flex-wrap: wrap; }
+    .tabs button {
+      background: transparent; color: #57534e; border: 1px solid transparent;
+      border-bottom: 2px solid transparent; border-radius: 0; padding: 0.5rem 0.9rem;
+      cursor: pointer; font: inherit;
+    }
+    .tabs button.active { color: var(--stone); border-bottom-color: var(--oxide); font-weight: 600; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin: 0.75rem 1.5rem; }
+    button, select, input {
+      font: inherit; border: 1px solid var(--stone); background: #fff; color: var(--stone);
+      padding: 0.45rem 0.8rem;
+    }
+    button.primary, button:not(.secondary):not(.tab):not(.ghost) {
+      background: var(--stone); color: var(--paper); cursor: pointer;
+    }
+    button.secondary, button.ghost { background: transparent; cursor: pointer; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    #status { font-size: 0.8rem; color: #57534e; }
+    main.ops {
+      display: grid; grid-template-columns: 1.1fr 1fr; gap: 1.25rem;
+      padding: 0.5rem 1.5rem 1rem;
+    }
+    @media (max-width: 900px) { main.ops { grid-template-columns: 1fr; } }
+    h2 {
+      margin: 0 0 0.75rem; font-size: 0.9rem; text-transform: uppercase;
+      letter-spacing: 0.08em; color: #57534e; font-weight: 600;
+    }
+    #map {
+      width: 100%; aspect-ratio: 4/3; background: #fff; border: 1px solid var(--line); position: relative;
+    }
+    #map.empty {
+      display: flex; align-items: center; justify-content: center; padding: 1.5rem; text-align: center;
+    }
+    #map .empty-hint {
+      max-width: 22rem; color: var(--muted); font-size: 0.9rem; line-height: 1.45;
+    }
+    #map .empty-hint strong { color: var(--stone); font-weight: 600; }
+    .zone {
+      position: absolute; border: 2px solid var(--stone); display: flex; align-items: flex-end;
+      padding: 0.4rem; font-size: 0.75rem; font-weight: 600; transition: transform 0.15s ease;
+    }
+    .zone:hover { transform: scale(1.02); z-index: 2; }
+    .zone.green { background: color-mix(in srgb, var(--green) 28%, white); }
+    .zone.amber { background: color-mix(in srgb, var(--amber) 32%, white); }
+    .zone.red { background: color-mix(in srgb, var(--red) 30%, white); }
+    .zone.grey { background: color-mix(in srgb, var(--grey) 25%, white); }
+    .map-extras { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 0.55rem; min-height: 0; }
+    .map-extras:empty { display: none; }
+    .map-chip {
+      font-size: 0.72rem; padding: 0.28rem 0.5rem; border: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper) 88%, var(--stone)); color: #44403c;
+      font-family: "IBM Plex Mono", monospace;
+    }
+    .map-callout {
+      flex: 1 1 100%; font-size: 0.82rem; padding: 0.45rem 0.6rem;
+      border-left: 3px solid var(--stone); background: color-mix(in srgb, var(--amber) 12%, white);
+      color: #44403c;
+    }
+    .map-stat {
+      font-size: 0.78rem; padding: 0.35rem 0.55rem; border: 1px solid var(--line);
+      background: white;
+    }
+    .map-stat strong { display: block; font-size: 1rem; letter-spacing: -0.02em; }
+    #log, #fullLog { max-height: 28rem; overflow: auto; border: 1px solid var(--line); background: #fff; }
+    #fullLog { max-height: 70vh; margin: 0.5rem 1.5rem 1.5rem; }
+    .ev { padding: 0.7rem 0.85rem; border-bottom: 1px solid var(--line); }
+    .ev .type { font-family: "IBM Plex Mono", monospace; font-size: 0.7rem; color: var(--oxide); }
+    .ev .body { margin-top: 0.2rem; font-size: 0.9rem; }
+    .ev .when { margin-top: 0.15rem; font-size: 0.7rem; color: #78716c; }
+    .board-wrap, .crew-wrap, .log-wrap { padding: 0.5rem 1.5rem 1.25rem; }
+    .board { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 0.75rem; }
+    @media (max-width: 900px) { .board { grid-template-columns: 1fr 1fr; } }
+    .col { background: #fff; border: 1px solid var(--line); min-height: 10rem; padding: 0.55rem; }
+    .col h3 { margin: 0 0 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: #57534e; }
+    .task { border: 1px solid var(--line); border-left: 3px solid var(--stone); padding: 0.5rem; margin-bottom: 0.4rem; font-size: 0.85rem; }
+    .task.risk { border-left-color: var(--red); }
+    .task .moves { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.35rem; }
+    .task .moves button { font-size: 0.65rem; padding: 0.12rem 0.3rem; background: transparent; }
+    .crew { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+    .person { background: #fff; border: 1px solid var(--line); padding: 0.6rem 0.75rem; min-width: 12rem; font-size: 0.85rem; }
+    .person .role { font-family: "IBM Plex Mono", monospace; font-size: 0.68rem; color: var(--oxide); text-transform: uppercase; }
+    .person .tg { font-size: 0.72rem; font-family: "IBM Plex Mono", monospace; margin-top: 0.2rem; }
+    .person .tg.bound { color: var(--green); }
+    .person .tg.unbound { color: var(--amber); }
+
+    .wiki-layout {
+      display: grid; grid-template-columns: 15rem 1fr; gap: 0; min-height: 70vh;
+      margin: 0.5rem 1.5rem 1.5rem; border: 1px solid var(--line); background: #fff;
+    }
+    @media (max-width: 800px) { .wiki-layout { grid-template-columns: 1fr; } }
+    .wiki-nav { border-right: 1px solid var(--line); overflow: auto; max-height: 70vh; padding: 0.75rem; background: #fafaf9; }
+    .wiki-nav .folder {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+      color: #78716c; margin: 0.65rem 0 0.2rem; padding-left: 0.4rem;
+    }
+    .wiki-nav a {
+      display: block; padding: 0.3rem 0.4rem 0.3rem 0.75rem; color: var(--stone); text-decoration: none;
+      font-size: 0.82rem; border-left: 2px solid transparent;
+    }
+    .wiki-nav a.active { border-left-color: var(--oxide); background: #fff7ed; font-weight: 600; }
+    .wiki-body { padding: 1.25rem 1.5rem 2rem; overflow: auto; max-height: 70vh; }
+    .wiki-engine { font-size: 0.72rem; color: #78716c; font-family: "IBM Plex Mono", monospace; margin-bottom: 0.5rem; }
+    .wiki-prose {
+      font-family: Literata, Georgia, serif; font-size: 1.02rem; line-height: 1.65; color: var(--ink);
+      max-width: 42rem;
+    }
+    .wiki-prose h1, .wiki-prose h2, .wiki-prose h3 {
+      font-family: "IBM Plex Sans", sans-serif; letter-spacing: -0.02em; text-transform: none; color: var(--stone);
+    }
+    .wiki-prose h1 { font-size: 1.55rem; margin: 0 0 0.75rem; }
+    .wiki-prose h2 { font-size: 1.15rem; margin: 1.4rem 0 0.5rem; letter-spacing: 0; }
+    .wiki-prose h3 { font-size: 1rem; margin: 1.1rem 0 0.4rem; letter-spacing: 0; color: #44403c; }
+    .wiki-prose p { margin: 0.55rem 0; }
+    .wiki-prose ul, .wiki-prose ol { padding-left: 1.25rem; }
+    .wiki-prose code {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.85em; background: #f5f5f4; padding: 0.1em 0.3em;
+    }
+    .wiki-prose pre {
+      background: #1c1917; color: #fafaf9; padding: 0.85rem 1rem; overflow: auto; font-size: 0.82rem;
+      font-family: "IBM Plex Mono", monospace; white-space: pre-wrap;
+    }
+    .wiki-prose pre code { background: transparent; color: inherit; padding: 0; }
+    .wiki-prose a.wikilink {
+      color: var(--oxide); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--oxide) 40%, transparent);
+      font-family: "IBM Plex Sans", sans-serif; font-size: 0.95em;
+    }
+    .wiki-prose a.wikilink:hover { border-bottom-color: var(--oxide); }
+    .wiki-prose a.wikilink.missing { color: var(--muted); border-bottom-style: dashed; }
+    .wiki-prose img {
+      max-width: min(100%, 36rem); height: auto; display: block; margin: 0.9rem 0;
+      border: 1px solid var(--line);
+    }
+    .wiki-prose blockquote {
+      margin: 0.8rem 0; padding: 0.2rem 0 0.2rem 0.9rem; border-left: 3px solid var(--oxide); color: #44403c;
+    }
+    .wiki-prose table { border-collapse: collapse; width: 100%; font-size: 0.9rem; margin: 0.8rem 0; }
+    .wiki-prose th, .wiki-prose td { border: 1px solid var(--line); padding: 0.35rem 0.5rem; text-align: left; }
+    .wiki-subtabs { display: flex; gap: 0.25rem; margin: 0 1.5rem 0.5rem; flex-wrap: wrap; }
+    .wiki-subtabs button {
+      background: transparent; color: #57534e; border: 1px solid var(--line);
+      padding: 0.35rem 0.75rem; cursor: pointer; font: inherit; font-size: 0.85rem;
+    }
+    .wiki-subtabs button.active { background: var(--stone); color: var(--paper); border-color: var(--stone); }
+    .wiki-maps-grid {
+      display: grid; grid-template-columns: 1.1fr 1fr; gap: 1.25rem;
+      padding: 0.5rem 1.5rem 1.5rem;
+    }
+    @media (max-width: 900px) { .wiki-maps-grid { grid-template-columns: 1fr; } }
+    #wikiZoneMap {
+      width: 100%; aspect-ratio: 4/3; background: #fff; border: 1px solid var(--line); position: relative;
+    }
+    #wikiZoneMap.empty {
+      display: flex; align-items: center; justify-content: center; padding: 1.5rem; text-align: center;
+    }
+    .wiki-gallery {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.65rem;
+    }
+    .wiki-gallery figure {
+      margin: 0; border: 1px solid var(--line); background: #fff; cursor: pointer;
+    }
+    .wiki-gallery img {
+      display: block; width: 100%; height: 110px; object-fit: cover; background: #f5f5f4;
+    }
+    .wiki-gallery figcaption {
+      font-size: 0.7rem; padding: 0.35rem 0.45rem; color: #57534e;
+      font-family: "IBM Plex Mono", monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .wiki-asset-layout {
+      display: grid; grid-template-columns: 220px 1fr; gap: 0; border-top: 1px solid var(--line);
+      min-height: 60vh;
+    }
+    @media (max-width: 800px) { .wiki-asset-layout { grid-template-columns: 1fr; } }
+    .wiki-asset-nav { border-right: 1px solid var(--line); overflow: auto; max-height: 70vh; padding: 0.75rem; background: #fafaf9; }
+    .wiki-asset-nav a {
+      display: block; padding: 0.35rem 0.5rem; color: var(--ink); text-decoration: none;
+      font-size: 0.82rem; border-left: 2px solid transparent;
+    }
+    .wiki-asset-nav a.active { border-left-color: var(--oxide); background: #fff7ed; font-weight: 600; }
+    .wiki-asset-viewer { padding: 1rem 1.25rem 1.5rem; overflow: auto; max-height: 70vh; }
+    .wiki-asset-viewer iframe.pdf-frame {
+      width: 100%; height: 68vh; border: 1px solid var(--line); background: #fff;
+    }
+    .wiki-asset-viewer img.full {
+      max-width: 100%; max-height: 68vh; display: block; border: 1px solid var(--line); background: #fff;
+    }
+    .backlinks {
+      margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--line);
+      font-family: "IBM Plex Sans", sans-serif; font-size: 0.85rem;
+    }
+    .backlinks h3 {
+      margin: 0 0 0.5rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+    }
+    .backlinks ul { margin: 0; padding-left: 1.1rem; }
+    .backlinks a { color: var(--oxide); cursor: pointer; text-decoration: none; }
+    .log-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 1.5rem; align-items: center; }
+    .log-filters input { min-width: 12rem; flex: 1; }
+
+    .overlay {
+      position: fixed; inset: 0; background: color-mix(in srgb, var(--stone) 45%, transparent);
+      display: flex; align-items: center; justify-content: center; z-index: 50; padding: 1rem;
+    }
+    .overlay.hidden { display: none; }
+    .modal {
+      background: var(--paper); border: 1px solid var(--line); max-width: 32rem; width: 100%;
+      padding: 1.25rem 1.4rem; box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+    }
+    .modal h1 { margin: 0 0 0.35rem; font-size: 1.35rem; letter-spacing: -0.02em; }
+    .modal .sub { color: #57534e; font-size: 0.9rem; margin-bottom: 1rem; }
+    .modal .row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.45rem 0; }
+    .modal .hint { font-size: 0.78rem; color: #78716c; white-space: pre-wrap; margin: 0.4rem 0; }
+    .modal input { flex: 1; min-width: 8rem; }
+    .hidden { display: none !important; }
+    @media (prefers-reduced-motion: reduce) {
+      .zone { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="onboard" class="overlay hidden">
+    <div class="modal">
+      <h1>Register as site admin</h1>
+      <p class="sub">First-time setup is stored in this browser. Pair Telegram so Hermes knows you’re the superintendent. Zones are mapped later in chat — not a fixed template.</p>
+      <div class="row">
+        <input id="adminName" placeholder="Your name" />
+        <input id="adminEmail" placeholder="Email (optional)" />
+      </div>
+      <div class="row">
+        <input id="adminProject" placeholder="Project name" />
+      </div>
+      <div class="row">
+        <input id="adminInbox" placeholder="Existing inbox email (optional)" style="flex:1" />
+      </div>
+      <div class="hint" id="onboardHint">1. Create / pick a project (optional: reuse an AgentMail inbox)
+2. Save your admin profile
+3. Pairing is optional if already bound in DB — otherwise paste Telegram code
+4. Import GeoJSON / site-plan PDF so zones appear on the map</div>
+      <div class="row">
+        <button id="btnOnboardCreate">Create project + save admin</button>
+        <button class="secondary" id="btnOnboardSkip">I already have a project</button>
+      </div>
+      <div class="row">
+        <input id="adminPairCode" placeholder="Your Telegram pairing code" maxlength="12" style="text-transform:uppercase;font-family:IBM Plex Mono,monospace" />
+        <button id="btnOnboardPair">Approve + bind me</button>
+      </div>
+      <div class="hint" id="onboardOut"></div>
+      <div class="row">
+        <button class="secondary" id="btnOnboardDone" disabled>Continue to dashboard</button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="brand">Field<span>Claw</span></div>
+    <div class="meta" id="projectMeta">—</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="ops">Ops · Kanban</button>
+    <button class="tab" data-tab="wiki">Wiki</button>
+    <button class="tab" data-tab="log">Log</button>
+    <button class="tab" data-tab="crew">Crew · Pairing</button>
+  </div>
+
+  <div class="toolbar">
+    <select id="projectSelect"></select>
+    <button class="secondary" id="btnRefresh">Refresh</button>
+    <button class="secondary" id="btnShowOnboard">Admin / setup</button>
+    <button class="secondary" id="btnResetCache" title="Clear FieldClaw localStorage and reload">Reset cache</button>
+    <span id="status"></span>
+    <details style="margin-left:auto;font-size:0.85rem">
+      <summary style="cursor:pointer;color:#78716c">Eval / replay</summary>
+      <div style="display:flex;gap:0.4rem;margin-top:0.35rem">
+        <button class="secondary" id="btnReplay">Play site replay</button>
+        <button class="secondary" id="btnResetSim">Reset sim</button>
+        <button class="secondary" id="btnSeed">Seed demo</button>
+      </div>
+    </details>
+  </div>
+
+  <section id="tab-ops">
+    <main class="ops">
+      <div>
+        <h2>Zone map</h2>
+        <div id="mapExtras" class="map-extras"></div>
+        <div id="map"></div>
+      </div>
+      <div>
+        <h2>Recent logbook</h2>
+        <div id="log"></div>
+      </div>
+    </main>
+    <div class="board-wrap">
+      <h2>Kanban</h2>
+      <div class="board" id="board"></div>
+    </div>
+  </section>
+
+  <section id="tab-wiki" class="hidden">
+    <div class="toolbar" style="margin-top:0">
+      <button class="secondary" id="btnWikiRefresh">Reload</button>
+      <button class="secondary" id="btnPullMail">Pull inbox attachments → wiki</button>
+      <span class="wiki-engine" id="wikiEngine"></span>
+    </div>
+    <div class="wiki-subtabs" id="wikiSubtabs">
+      <button type="button" data-wiki-view="pages" class="active">Pages</button>
+      <button type="button" data-wiki-view="maps">Maps</button>
+      <button type="button" data-wiki-view="docs">PDFs &amp; photos</button>
+    </div>
+
+    <div id="wikiViewPages">
+      <div class="wiki-layout">
+        <nav class="wiki-nav" id="wikiNav"></nav>
+        <article class="wiki-body"><div class="wiki-prose" id="wikiBody">Select a page</div></article>
+      </div>
+    </div>
+
+    <div id="wikiViewMaps" class="hidden">
+      <div class="wiki-maps-grid">
+        <div>
+          <h2>Zone map</h2>
+          <div id="wikiZoneMap"></div>
+          <p style="margin:0.6rem 0 0;color:var(--muted);font-size:0.85rem">Same live zones as Ops — filled when GeoJSON / site-plan import succeeds.</p>
+        </div>
+        <div>
+          <h2>Site plans &amp; map images</h2>
+          <div class="wiki-gallery" id="wikiMapsGallery"></div>
+          <div id="wikiMapsEmpty" style="color:var(--muted);font-size:0.9rem;display:none">
+            No map images yet. Upload a file whose name includes <code>sitemap</code>, <code>site-plan</code>, or <code>zone-map</code>, or pull mail attachments.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="wikiViewDocs" class="hidden">
+      <div class="wiki-asset-layout">
+        <nav class="wiki-asset-nav" id="wikiAssetsNav"></nav>
+        <div class="wiki-asset-viewer" id="wikiAssetViewer">
+          <p style="color:var(--muted);margin:0">Select a PDF or photo to preview inline.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-log" class="hidden">
+    <div class="log-wrap">
+      <h2>Project log</h2>
+      <p style="margin:0 0 0.75rem;color:var(--muted);font-size:0.9rem">Every event on this project — status, safety, mail, wiki, proofs.</p>
+    </div>
+    <div class="log-filters">
+      <input id="logFilter" placeholder="Filter type, source, or text…" />
+      <select id="logTypeFilter">
+        <option value="">All types</option>
+      </select>
+      <button class="secondary" id="btnLogRefresh">Reload</button>
+      <span class="wiki-engine" id="logCount"></span>
+    </div>
+    <div id="fullLog"></div>
+  </section>
+
+  <section id="tab-crew" class="hidden">
+    <div class="crew-wrap">
+      <h2>Crew</h2>
+      <div class="crew" id="crew"></div>
+    </div>
+    <div class="crew-wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div class="person" style="min-width:0;flex:1">
+        <div class="role">Add foreman (Telegram pairing)</div>
+        <p class="hint" id="pairInstructions" style="font-size:0.78rem;color:#78716c;white-space:pre-wrap"></p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.4rem">
+          <input id="foremanName" placeholder="Foreman name" value="James Ortiz" />
+          <button class="secondary" id="btnRegForeman">Save name</button>
+          <button class="secondary" id="btnRefreshPair">Refresh pending</button>
+        </div>
+        <div id="pendingList" style="font-size:0.75rem;color:#78716c;margin:0.4rem 0;font-family:IBM Plex Mono,monospace;white-space:pre-wrap"></div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.4rem">
+          <input id="pairCode" placeholder="8-char code from foreman" maxlength="12" style="text-transform:uppercase;font-family:IBM Plex Mono,monospace;flex:1" />
+          <button id="btnApproveForeman">Approve + bind foreman</button>
+        </div>
+        <div id="pairOut" style="font-size:0.75rem;margin-top:0.4rem;white-space:pre-wrap"></div>
+      </div>
+      <div class="person" style="min-width:0">
+        <div class="role">New project + inbox</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.5rem">
+          <input id="newProjectName" placeholder="Project name" style="flex:1" />
+          <input id="newInboxUser" placeholder="inbox username (opt)" style="flex:1" />
+        </div>
+        <div style="margin-top:0.4rem">
+          <button id="btnCreateProject">Create + wiki + inbox</button>
+        </div>
+        <div id="createOut" style="font-size:0.75rem;margin-top:0.4rem;white-space:pre-wrap"></div>
+        <div class="role" style="margin-top:1rem">Local profile</div>
+        <div id="localProfile" style="font-size:0.8rem;margin-top:0.35rem;font-family:IBM Plex Mono,monospace"></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const LS = {
+      key: () => localStorage.getItem("FIELDCLAW_API_KEY") || "dev-key-change-me",
+      projectId: () => localStorage.getItem("FIELDCLAW_PROJECT_ID") || "",
+      setProject: (id) => localStorage.setItem("FIELDCLAW_PROJECT_ID", id),
+      admin: () => {
+        try { return JSON.parse(localStorage.getItem("FIELDCLAW_ADMIN") || "null"); }
+        catch { return null; }
+      },
+      setAdmin: (o) => localStorage.setItem("FIELDCLAW_ADMIN", JSON.stringify(o)),
+      onboarded: () => localStorage.getItem("FIELDCLAW_ONBOARDED") === "1",
+      setOnboarded: () => localStorage.setItem("FIELDCLAW_ONBOARDED", "1"),
+      clear: () => {
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith("FIELDCLAW_")) keys.push(k);
+        }
+        keys.forEach((k) => localStorage.removeItem(k));
+      },
+    };
+
+    const headers = () => ({ "X-API-Key": LS.key(), "Content-Type": "application/json" });
+    let projectId = LS.projectId();
+    let projects = [];
+    let zonesById = {};
+    let allEvents = [];
+    let wikiPages = [];
+    let wikiAssets = [];
+    let currentWikiPath = "";
+    let currentWikiView = "pages";
+    let currentAssetKey = "";
+    const COLS = [["todo","Todo"],["in_progress","In progress"],["blocked","Blocked"],["done","Done"]];
+    const setStatus = (t) => { document.getElementById("status").textContent = t; };
+
+    async function api(path, opts = {}) {
+      const r = await fetch(path, { ...opts, headers: { ...headers(), ...(opts.headers || {}) } });
+      if (!r.ok) throw new Error(await r.text());
+      return r.json();
+    }
+
+    function showTab(name) {
+      ["ops","wiki","log","crew"].forEach((t) => {
+        document.getElementById(`tab-${t}`).classList.toggle("hidden", t !== name);
+      });
+      document.querySelectorAll(".tabs .tab").forEach((b) => {
+        b.classList.toggle("active", b.dataset.tab === name);
+      });
+      if (name === "wiki") refreshWiki();
+      if (name === "log") refreshFullLog();
+      if (name === "crew") { refreshPairing(); renderLocalProfile(); }
+    }
+
+    document.querySelectorAll(".tabs .tab").forEach((b) => {
+      b.onclick = () => showTab(b.dataset.tab);
+    });
+
+    function renderProjectSelect() {
+      const sel = document.getElementById("projectSelect");
+      sel.innerHTML = "";
+      for (const p of projects) {
+        const opt = document.createElement("option");
+        opt.value = p.id;
+        opt.textContent = `${p.name} · ${(p.inbox_email || "?").split("@")[0]}`;
+        if (p.id === projectId) opt.selected = true;
+        sel.appendChild(opt);
+      }
+      if (!projectId && projects[0]) {
+        projectId = projects[0].id;
+        LS.setProject(projectId);
+        sel.value = projectId;
+      }
+    }
+
+    function paintZonesOnto(map, zones) {
+      map.innerHTML = "";
+      if (!zones.length) {
+        map.classList.add("empty");
+        map.innerHTML = `<div class="empty-hint"><strong>No zones yet.</strong><br/>
+          Ask Supervisor Claw on Telegram to map the site during setup
+          (areas become live tiles here — not a fixed template).</div>`;
+        return;
+      }
+      map.classList.remove("empty");
+      for (const z of zones) {
+        const poly = z.polygon || [];
+        if (!poly.length) continue;
+        const xs = poly.map((p) => p[0]), ys = poly.map((p) => p[1]);
+        const el = document.createElement("div");
+        el.className = `zone ${z.status}`;
+        el.style.left = Math.min(...xs) + "%";
+        el.style.top = Math.min(...ys) + "%";
+        el.style.width = Math.max(8, Math.max(...xs) - Math.min(...xs)) + "%";
+        el.style.height = Math.max(8, Math.max(...ys) - Math.min(...ys)) + "%";
+        el.textContent = `${z.label.split("—")[0].trim()} · ${Math.round(z.progress_pct)}%`;
+        el.title = z.label;
+        map.appendChild(el);
+      }
+    }
+
+    function renderZones(zones) {
+      zonesById = {};
+      for (const z of zones) zonesById[z.id] = z;
+      paintZonesOnto(document.getElementById("map"), zones);
+      const wikiMap = document.getElementById("wikiZoneMap");
+      if (wikiMap) paintZonesOnto(wikiMap, zones);
+    }
+
+    function eventText(e) {
+      const p = e.payload || {};
+      return p.text || p.message || p.summary || p.caption || p.material || p.note || JSON.stringify(p);
+    }
+
+    function renderEventList(events, el) {
+      el.innerHTML = "";
+      if (!events.length) {
+        el.innerHTML = `<div class="ev"><div class="body" style="color:var(--muted)">No events yet.</div></div>`;
+        return;
+      }
+      for (const e of events) {
+        const div = document.createElement("div");
+        div.className = "ev";
+        const zone = e.zone_id && zonesById[e.zone_id] ? zonesById[e.zone_id].label : "";
+        div.innerHTML = `<div class="type">${e.type} · ${e.source}${zone ? " · " + zone : ""}</div>
+          <div class="body">${escapeHtml(String(eventText(e)))}</div>
+          <div class="when">${new Date(e.created_at).toLocaleString()} · ${e.id.slice(0,8)}</div>`;
+        el.appendChild(div);
+      }
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+    }
+
+    function renderEvents(events) {
+      renderEventList(events.slice(0, 40), document.getElementById("log"));
+    }
+
+    function refreshFullLog() {
+      const q = (document.getElementById("logFilter").value || "").toLowerCase();
+      const type = document.getElementById("logTypeFilter").value;
+      let list = allEvents.slice().reverse();
+      if (type) list = list.filter((e) => e.type === type);
+      if (q) {
+        list = list.filter((e) =>
+          (e.type + " " + e.source + " " + eventText(e)).toLowerCase().includes(q)
+        );
+      }
+      document.getElementById("logCount").textContent = `${list.length} / ${allEvents.length} events`;
+      renderEventList(list, document.getElementById("fullLog"));
+    }
+
+    function populateLogTypes(events) {
+      const sel = document.getElementById("logTypeFilter");
+      const cur = sel.value;
+      const types = [...new Set(events.map((e) => e.type))].sort();
+      sel.innerHTML = `<option value="">All types</option>` +
+        types.map((t) => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join("");
+      if (cur) sel.value = cur;
+    }
+
+    function renderPeople(people) {
+      const crew = document.getElementById("crew");
+      crew.innerHTML = "";
+      for (const p of people) {
+        const el = document.createElement("div");
+        el.className = "person";
+        const bound = Boolean(p.telegram_id);
+        el.innerHTML = `<div class="role">${p.role}</div><div>${p.name}</div>
+          <div class="tg ${bound?"bound":"unbound"}">${bound?("tg "+p.telegram_id):"telegram unbound"}</div>`;
+        crew.appendChild(el);
+      }
+    }
+
+    async function moveTask(id, status) {
+      await api(`/api/projects/${projectId}/tasks/${id}`, { method: "PATCH", body: JSON.stringify({ status }) });
+      await refresh();
+    }
+
+    function renderTasks(tasks) {
+      const board = document.getElementById("board");
+      board.innerHTML = "";
+      for (const [key, label] of COLS) {
+        const col = document.createElement("div");
+        col.className = "col";
+        col.innerHTML = `<h3>${label}</h3>`;
+        for (const t of tasks.filter((x) => x.status === key)) {
+          const card = document.createElement("div");
+          card.className = `task${t.at_risk?" risk":""}`;
+          const moves = COLS.filter(([s]) => s !== t.status)
+            .map(([s,l]) => `<button data-id="${t.id}" data-status="${s}">${l}</button>`).join("");
+          card.innerHTML = `<div>${t.title}${t.at_risk?" · at risk":""}</div><div class="moves">${moves}</div>`;
+          col.appendChild(card);
+        }
+        board.appendChild(col);
+      }
+      board.querySelectorAll(".moves button").forEach((b) => {
+        b.onclick = () => moveTask(b.dataset.id, b.dataset.status);
+      });
+    }
+
+    async function loadProjects() {
+      projects = await api("/api/projects");
+      renderProjectSelect();
+    }
+
+    function renderUiWidgets(widgets) {
+      const box = document.getElementById("mapExtras");
+      if (!box) return;
+      box.innerHTML = "";
+      if (!widgets || !widgets.length) return;
+      for (const w of widgets) {
+        const t = (w && w.type) || "chip";
+        const el = document.createElement("div");
+        if (t === "callout" || t === "map_callout") {
+          el.className = "map-callout";
+          el.textContent = w.text || w.summary || w.label || "";
+          if (w.zone) el.dataset.zone = w.zone;
+        } else if (t === "stat") {
+          el.className = "map-stat";
+          el.innerHTML = `<strong>${escapeHtml(String(w.value ?? ""))}</strong>${escapeHtml(String(w.label || ""))}`;
+        } else if (t === "legend" && Array.isArray(w.items)) {
+          el.className = "map-chip";
+          el.textContent = w.items.map((i) => (typeof i === "string" ? i : (i.label || i.name))).join(" · ");
+        } else {
+          el.className = "map-chip";
+          el.textContent = w.label || w.text || w.zone || JSON.stringify(w).slice(0, 80);
+        }
+        box.appendChild(el);
+      }
+    }
+
+    async function refresh() {
+      if (!projectId) return;
+      const [zones, events, tasks, people, project, ui] = await Promise.all([
+        api(`/api/projects/${projectId}/zones`),
+        api(`/api/projects/${projectId}/events`),
+        api(`/api/projects/${projectId}/tasks`),
+        api(`/api/projects/${projectId}/people`),
+        api(`/api/projects/${projectId}`),
+        api(`/api/projects/${projectId}/ui/widgets`).catch(() => ({ widgets: [] })),
+      ]);
+      allEvents = events;
+      populateLogTypes(events);
+      renderZones(zones); renderEvents(events); renderTasks(tasks); renderPeople(people);
+      renderUiWidgets(ui.widgets || []);
+      document.getElementById("projectMeta").textContent =
+        `${project.name} · ${(project.inbox_email||"no-inbox")} · ${projectId.slice(0,8)}…`;
+      if (!document.getElementById("tab-log").classList.contains("hidden")) refreshFullLog();
+    }
+
+    /* —— Wiki markdown + backlinks —— */
+    function pageKey(path) {
+      return (path || "").replace(/\.md$/i, "").toLowerCase();
+    }
+
+    function resolveWikiTarget(target, fromPath) {
+      let t = (target || "").trim().replace(/\.md$/i, "");
+      if (!t) return null;
+      const dir = (fromPath || "").includes("/") ? fromPath.split("/").slice(0, -1).join("/") : "";
+      const candidates = [
+        t,
+        t + ".md",
+        dir ? `${dir}/${t}` : null,
+        dir ? `${dir}/${t}.md` : null,
+        `zones/${t}`,
+        `people/${t}`,
+        `ops/${t}`,
+        `sources/${t}`,
+        `pos/${t}`,
+        `rfis/${t}`,
+        `media/${t}`,
+      ].filter(Boolean);
+      const byPath = Object.fromEntries(wikiPages.map((p) => [pageKey(p.path), p]));
+      for (const c of candidates) {
+        const hit = byPath[pageKey(c)];
+        if (hit) return hit;
+      }
+      // fuzzy title / stem match
+      const stem = t.split("/").pop().toLowerCase();
+      return wikiPages.find((p) => pageKey(p.path).endsWith("/" + stem) || pageKey(p.path) === stem) || null;
+    }
+
+    function collectBacklinks(path) {
+      const keys = new Set([pageKey(path), pageKey(path).split("/").pop()]);
+      const hits = [];
+      for (const p of wikiPages) {
+        if (pageKey(p.path) === pageKey(path)) continue;
+        const md = p._mdCache;
+        if (!md) continue;
+        const links = [...md.matchAll(/\[\[([^\]]+)\]\]/g)].map((m) => m[1].split("|")[0].trim());
+        const mdLinks = [...md.matchAll(/\]\(([^)]+\.md)\)/g)].map((m) => m[1]);
+        const all = [...links, ...mdLinks];
+        if (all.some((t) => {
+          const resolved = resolveWikiTarget(t, p.path);
+          return resolved && pageKey(resolved.path) === pageKey(path);
+        }) || all.some((t) => keys.has(pageKey(t)) || keys.has(pageKey(t.split("/").pop())))) {
+          hits.push(p);
+        }
+      }
+      return hits;
+    }
+
+    function renderWikiMarkdown(md, pagePath) {
+      const dir = (pagePath || "").includes("/") ? pagePath.split("/").slice(0, -1).join("/") : "";
+      // Convert [[wiki links]] before marked
+      let src = md.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, target, label) => {
+        const page = resolveWikiTarget(target, pagePath);
+        const text = label || target;
+        if (page) return `[${text}](wikilink:${page.path})`;
+        return `[${text}](wikilink-missing:${target})`;
+      });
+
+      marked.setOptions({ gfm: true, breaks: true });
+      const rawHtml = marked.parse(src);
+      const clean = DOMPurify.sanitize(rawHtml, { ADD_ATTR: ["data-wiki", "data-missing"] });
+      const wrap = document.createElement("div");
+      wrap.innerHTML = clean;
+
+      wrap.querySelectorAll("a").forEach((a) => {
+        const href = a.getAttribute("href") || "";
+        if (href.startsWith("wikilink:")) {
+          const path = href.slice("wikilink:".length);
+          a.className = "wikilink";
+          a.href = "#";
+          a.onclick = (e) => { e.preventDefault(); openWikiPath(path); };
+        } else if (href.startsWith("wikilink-missing:")) {
+          a.className = "wikilink missing";
+          a.href = "#";
+          a.title = "Missing page";
+          a.onclick = (e) => e.preventDefault();
+        } else if (href.startsWith("http") || href.startsWith("mailto:")) {
+          a.target = "_blank";
+          a.rel = "noopener";
+        }
+      });
+
+      wrap.querySelectorAll("img").forEach((img) => {
+        let srcAttr = img.getAttribute("src") || "";
+        if (srcAttr.startsWith("http") || srcAttr.startsWith("data:")) return;
+        let rel = srcAttr;
+        if (srcAttr.startsWith("../")) rel = srcAttr.replace(/^\.\.\//, "");
+        else if (!srcAttr.includes("/") && dir) rel = `${dir}/${srcAttr}`;
+        else if (srcAttr.startsWith("./")) rel = dir ? `${dir}/${srcAttr.slice(2)}` : srcAttr.slice(2);
+        img.src = `/api/projects/${projectId}/wiki/file/${rel.split("/").map(encodeURIComponent).join("/")}?api_key=${encodeURIComponent(LS.key())}`;
+      });
+
+      const back = collectBacklinks(pagePath);
+      const bl = document.createElement("div");
+      bl.className = "backlinks";
+      if (back.length) {
+        bl.innerHTML = `<h3>Backlinks</h3><ul>${back.map((p) =>
+          `<li><a data-path="${escapeHtml(p.path)}">${escapeHtml((p.path || "").replace(/\.md$/i, ""))}</a></li>`
+        ).join("")}</ul>`;
+        bl.querySelectorAll("a").forEach((a) => {
+          a.onclick = (e) => { e.preventDefault(); openWikiPath(a.dataset.path); };
+        });
+      } else {
+        bl.innerHTML = `<h3>Backlinks</h3><p style="color:var(--muted);margin:0">No pages link here yet.</p>`;
+      }
+      wrap.appendChild(bl);
+      return wrap;
+    }
+
+    function assetFileUrl(a) {
+      const enc = a.path.split("/").map(encodeURIComponent).join("/");
+      const base = a.root === "raw"
+        ? `/api/projects/${projectId}/raw/file/${enc}`
+        : `/api/projects/${projectId}/wiki/file/${enc}`;
+      return `${base}?api_key=${encodeURIComponent(LS.key())}`;
+    }
+
+    function assetKey(a) {
+      return `${a.root}:${a.path}`;
+    }
+
+    function isMapishAsset(a) {
+      const n = (a.name || "").toLowerCase();
+      const f = (a.folder || "").toLowerCase();
+      return f === "maps"
+        || a.type === "geojson"
+        || /sitemap|site[-_]?plan|zone[-_]?map|logistics|location[-_]?map/.test(n);
+    }
+
+    function showWikiView(name) {
+      currentWikiView = name;
+      document.getElementById("wikiViewPages").classList.toggle("hidden", name !== "pages");
+      document.getElementById("wikiViewMaps").classList.toggle("hidden", name !== "maps");
+      document.getElementById("wikiViewDocs").classList.toggle("hidden", name !== "docs");
+      document.querySelectorAll("#wikiSubtabs button").forEach((b) => {
+        b.classList.toggle("active", b.dataset.wikiView === name);
+      });
+      if (name === "maps") renderWikiMaps();
+      if (name === "docs") renderWikiDocs();
+    }
+
+    function renderWikiMaps() {
+      const gallery = document.getElementById("wikiMapsGallery");
+      const empty = document.getElementById("wikiMapsEmpty");
+      gallery.innerHTML = "";
+      const images = wikiAssets.filter((a) => a.type === "image" && isMapishAsset(a));
+      const plans = wikiAssets.filter((a) => a.type === "pdf" && isMapishAsset(a));
+      if (!images.length && !plans.length) {
+        empty.style.display = "block";
+        return;
+      }
+      empty.style.display = "none";
+      for (const a of images) {
+        const fig = document.createElement("figure");
+        fig.innerHTML = `<img src="${assetFileUrl(a)}" alt="${escapeHtml(a.name)}" loading="lazy" /><figcaption>${escapeHtml(a.name)}</figcaption>`;
+        fig.onclick = () => {
+          showWikiView("docs");
+          openWikiAsset(a);
+        };
+        gallery.appendChild(fig);
+      }
+      for (const a of plans) {
+        const fig = document.createElement("figure");
+        fig.innerHTML = `<div style="height:110px;display:flex;align-items:center;justify-content:center;background:#f5f5f4;font-size:0.8rem;color:#57534e">PDF site plan</div><figcaption>${escapeHtml(a.name)}</figcaption>`;
+        fig.onclick = () => {
+          showWikiView("docs");
+          openWikiAsset(a);
+        };
+        gallery.appendChild(fig);
+      }
+    }
+
+    function openWikiAsset(a) {
+      currentAssetKey = assetKey(a);
+      const nav = document.getElementById("wikiAssetsNav");
+      nav.querySelectorAll("a").forEach((x) => {
+        x.classList.toggle("active", x.dataset.key === currentAssetKey);
+      });
+      const viewer = document.getElementById("wikiAssetViewer");
+      const url = assetFileUrl(a);
+      const meta = `<div style="margin:0 0 0.65rem;font-size:0.78rem;color:var(--muted);font-family:IBM Plex Mono,monospace">${escapeHtml(a.root)}/${escapeHtml(a.path)} · ${(a.bytes/1024).toFixed(0)} KB</div>`;
+      if (a.type === "pdf") {
+        viewer.innerHTML = meta + `<iframe class="pdf-frame" title="${escapeHtml(a.name)}" src="${url}"></iframe>
+          <p style="margin:0.5rem 0 0"><a href="${url}" target="_blank" rel="noopener">Open PDF in new tab</a></p>`;
+      } else if (a.type === "image") {
+        viewer.innerHTML = meta + `<img class="full" src="${url}" alt="${escapeHtml(a.name)}" />`;
+      } else if (a.type === "geojson") {
+        viewer.innerHTML = meta + `<pre style="white-space:pre-wrap;font-size:0.78rem;background:#fff;border:1px solid var(--line);padding:0.75rem;max-height:60vh;overflow:auto" id="geojsonPreview">Loading…</pre>`;
+        fetch(url).then((r) => r.text()).then((t) => {
+          const el = document.getElementById("geojsonPreview");
+          if (el) el.textContent = t.slice(0, 80000);
+        }).catch((e) => {
+          const el = document.getElementById("geojsonPreview");
+          if (el) el.textContent = String(e);
+        });
+      } else {
+        viewer.innerHTML = meta + `<a href="${url}" target="_blank" rel="noopener">Download ${escapeHtml(a.name)}</a>`;
+      }
+    }
+
+    function renderWikiDocs() {
+      const nav = document.getElementById("wikiAssetsNav");
+      const viewer = document.getElementById("wikiAssetViewer");
+      nav.innerHTML = "";
+      const docs = wikiAssets.filter((a) => a.type === "pdf" || a.type === "image" || a.type === "geojson");
+      if (!docs.length) {
+        viewer.innerHTML = `<p style="color:var(--muted);margin:0">No PDFs or photos yet. Pull inbox attachments or upload via wiki ingest — binaries land in <code>wiki/sources</code> and <code>raw/</code>.</p>`;
+        return;
+      }
+      const groups = { pdf: "PDFs", image: "Photos", geojson: "GeoJSON" };
+      for (const [type, label] of Object.entries(groups)) {
+        const items = docs.filter((a) => a.type === type);
+        if (!items.length) continue;
+        const hdr = document.createElement("div");
+        hdr.className = "folder";
+        hdr.style.cssText = "font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:#78716c;margin:0.55rem 0 0.25rem;padding:0 0.5rem";
+        hdr.textContent = label;
+        nav.appendChild(hdr);
+        for (const a of items) {
+          const link = document.createElement("a");
+          link.href = "#";
+          link.dataset.key = assetKey(a);
+          link.textContent = a.name;
+          link.title = `${a.root}/${a.path}`;
+          link.onclick = (e) => { e.preventDefault(); openWikiAsset(a); };
+          nav.appendChild(link);
+        }
+      }
+      const pick = docs.find((a) => assetKey(a) === currentAssetKey) || docs[0];
+      if (pick) openWikiAsset(pick);
+    }
+
+    async function refreshWikiAssets() {
+      if (!projectId) return;
+      try {
+        const data = await api(`/api/projects/${projectId}/wiki/assets`);
+        wikiAssets = data.assets || [];
+      } catch {
+        wikiAssets = [];
+      }
+      if (currentWikiView === "maps") renderWikiMaps();
+      if (currentWikiView === "docs") renderWikiDocs();
+    }
+
+    async function openWikiPath(path) {
+      const nav = document.getElementById("wikiNav");
+      const page = wikiPages.find((p) => p.path === path) || { path };
+      currentWikiPath = path;
+      nav.querySelectorAll("a").forEach((x) => {
+        x.classList.toggle("active", x.dataset.path === path);
+      });
+      const data = await api(`/api/projects/${projectId}/wiki/page?path=${encodeURIComponent(path)}`);
+      // cache markdown on page object for backlinks
+      const cached = wikiPages.find((p) => p.path === path);
+      if (cached) cached._mdCache = data.markdown || "";
+      const body = document.getElementById("wikiBody");
+      body.innerHTML = "";
+      body.appendChild(renderWikiMarkdown(data.markdown || "", path));
+    }
+
+    async function prefetchWikiMarkdown() {
+      // light prefetch for backlinks (cap)
+      const targets = wikiPages.filter((p) => (p.path || "").endsWith(".md")).slice(0, 40);
+      await Promise.all(targets.map(async (p) => {
+        if (p._mdCache) return;
+        try {
+          const data = await api(`/api/projects/${projectId}/wiki/page?path=${encodeURIComponent(p.path)}`);
+          p._mdCache = data.markdown || "";
+        } catch { p._mdCache = ""; }
+      }));
+    }
+
+    async function refreshWiki() {
+      if (!projectId) return;
+      try {
+        const data = await api(`/api/projects/${projectId}/wiki/pages`);
+        wikiPages = data.pages || [];
+        document.getElementById("wikiEngine").textContent =
+          `engine=${data.engine} · ${wikiPages.length} pages · ${data.kb_relpath}`;
+        const nav = document.getElementById("wikiNav");
+        nav.innerHTML = "";
+        if (!wikiPages.length) {
+          nav.innerHTML = "<div style='font-size:0.8rem;color:#78716c'>No wiki pages yet. Pull mail or chat with Supervisor Claw to bootstrap.</div>";
+          document.getElementById("wikiBody").textContent = "(empty wiki)";
+          await refreshWikiAssets();
+          return;
+        }
+        const byFolder = {};
+        for (const p of wikiPages) {
+          const f = p.folder || (p.path === "index.md" ? "" : "other");
+          (byFolder[f] ||= []).push(p);
+        }
+        const preferred = ["", "ops", "zones", "maps", "people", "pos", "rfis", "sources", "media", "pageindex"];
+        const order = [
+          ...preferred.filter((f) => byFolder[f]?.length),
+          ...Object.keys(byFolder).filter((f) => !preferred.includes(f)).sort(),
+        ];
+        for (const f of order) {
+          const pages = byFolder[f];
+          if (!pages?.length) continue;
+          const label = document.createElement("div");
+          label.className = "folder";
+          label.textContent = f === "" ? "root" : f + "/";
+          nav.appendChild(label);
+          for (const p of pages) {
+            const a = document.createElement("a");
+            a.href = "#";
+            a.dataset.path = p.path;
+            const base = (p.path || "").split("/").pop() || p.title;
+            a.textContent = base.replace(/\.md$/i, "");
+            a.title = p.path;
+            a.onclick = async (e) => { e.preventDefault(); await openWikiPath(p.path); };
+            nav.appendChild(a);
+          }
+        }
+        await prefetchWikiMarkdown();
+        await refreshWikiAssets();
+        const start = currentWikiPath && wikiPages.some((p) => p.path === currentWikiPath)
+          ? currentWikiPath
+          : (wikiPages.find((p) => p.path === "index.md") || wikiPages[0]).path;
+        await openWikiPath(start);
+      } catch (e) {
+        document.getElementById("wikiBody").textContent = String(e);
+      }
+    }
+
+    async function refreshPairing() {
+      try {
+        const data = await api("/api/pairing");
+        document.getElementById("pairInstructions").textContent = data.instructions || "";
+        const pending = data.pending || [];
+        document.getElementById("pendingList").textContent = pending.length
+          ? pending.map((p) => `${p.user_name||"?"} · ${p.user_id} · ${p.age_minutes}m`).join("\n")
+          : "No pending codes — ask the foreman to DM the bot first.";
+      } catch (e) {
+        document.getElementById("pairInstructions").textContent = String(e);
+      }
+    }
+
+    function renderLocalProfile() {
+      const a = LS.admin();
+      document.getElementById("localProfile").textContent = a
+        ? `admin=${a.name}\nproject=${a.projectId||"—"}\ntelegram=${a.telegramId||"unbound"}\nonboarded=${LS.onboarded()}`
+        : "(no local admin profile)";
+    }
+
+    function showOnboard(force=false) {
+      if (!force && LS.onboarded() && LS.admin()) return;
+      document.getElementById("onboard").classList.remove("hidden");
+      refreshPairing();
+    }
+    function hideOnboard() {
+      document.getElementById("onboard").classList.add("hidden");
+    }
+
+    document.getElementById("btnShowOnboard").onclick = () => {
+      document.getElementById("onboard").classList.remove("hidden");
+    };
+    document.getElementById("btnResetCache").onclick = () => {
+      if (!confirm("Clear FieldClaw browser cache (project, admin, onboarded) and reload?")) return;
+      LS.clear();
+      location.reload();
+    };
+    document.getElementById("btnOnboardSkip").onclick = async () => {
+      await loadProjects();
+      const pick = LS.projectId() && projects.some((p) => p.id === LS.projectId())
+        ? LS.projectId()
+        : (projects[0]?.id || "");
+      if (pick) {
+        projectId = pick;
+        LS.setProject(projectId);
+        const name = document.getElementById("adminName").value.trim() || "Site Admin";
+        LS.setAdmin({
+          name,
+          email: document.getElementById("adminEmail").value.trim() || null,
+          projectId,
+          telegramId: null,
+        });
+        LS.setOnboarded();
+        renderProjectSelect();
+        await refresh();
+        hideOnboard();
+        setStatus("opened " + (projects.find((p) => p.id === projectId)?.name || projectId.slice(0, 8)));
+        document.getElementById("onboardOut").textContent =
+          `Using ${projects.find((p) => p.id === projectId)?.name || projectId}`;
+      } else {
+        document.getElementById("onboardOut").textContent = "No projects yet — create one.";
+      }
+    };
+    document.getElementById("btnOnboardCreate").onclick = async () => {
+      const name = document.getElementById("adminName").value.trim() || "Site Admin";
+      const email = document.getElementById("adminEmail").value.trim() || null;
+      const pname = document.getElementById("adminProject").value.trim() || "My Site";
+      const inbox = (document.getElementById("adminInbox")?.value || "").trim();
+      setStatus("creating…");
+      try {
+        const body = {
+          name: pname,
+          provision_inbox: !inbox,
+          with_demo_zones: false,
+        };
+        if (inbox) body.inbox_email = inbox;
+        const created = await api("/api/projects", {
+          method: "POST",
+          body: JSON.stringify(body),
+        });
+        projectId = created.project_id;
+        LS.setProject(projectId);
+        const admin = await api(`/api/projects/${projectId}/admin/register`, {
+          method: "POST",
+          body: JSON.stringify({ name, email }),
+        });
+        LS.setAdmin({ name, email, projectId, personId: admin.id, telegramId: admin.telegram_id });
+        await loadProjects();
+        await refresh();
+        document.getElementById("onboardOut").textContent =
+          `Project ${projectId.slice(0,8)}\ninbox ${created.inbox_email || inbox || "(none)"}\nwiki ${created.kb_relpath}\n` +
+          (inbox
+            ? "Reused existing AgentMail inbox — pull attachments or import GeoJSON next.\n"
+            : "Zones empty until you map them.\n") +
+          "Pair Telegram if the crew tab still shows unbound.";
+        document.getElementById("btnOnboardDone").disabled = false;
+        setStatus("admin project ready");
+      } catch (e) {
+        document.getElementById("onboardOut").textContent = String(e);
+      }
+    };
+    document.getElementById("btnOnboardPair").onclick = async () => {
+      if (!projectId) return;
+      const code = document.getElementById("adminPairCode").value.trim();
+      const name = document.getElementById("adminName").value.trim() || LS.admin()?.name || "Site Admin";
+      if (!code) return;
+      try {
+        const data = await api("/api/pairing/approve", {
+          method: "POST",
+          body: JSON.stringify({
+            code, platform: "telegram", project_id: projectId,
+            bind_role: "superintendent", person_name: name,
+          }),
+        });
+        const tid = data.pairing?.user?.user_id || data.bound_person?.telegram_id;
+        const prev = LS.admin() || { name, projectId };
+        LS.setAdmin({ ...prev, telegramId: tid, personId: data.bound_person?.id });
+        LS.setOnboarded();
+        document.getElementById("onboardOut").textContent = "Bound admin telegram " + tid;
+        document.getElementById("btnOnboardDone").disabled = false;
+        await refresh();
+      } catch (e) {
+        document.getElementById("onboardOut").textContent = String(e);
+      }
+    };
+    document.getElementById("btnOnboardDone").onclick = () => {
+      LS.setOnboarded();
+      hideOnboard();
+      showTab("ops");
+    };
+
+    document.getElementById("projectSelect").onchange = async (e) => {
+      projectId = e.target.value;
+      LS.setProject(projectId);
+      currentWikiPath = "";
+      await refresh();
+      if (!document.getElementById("tab-wiki").classList.contains("hidden")) refreshWiki();
+      if (!document.getElementById("tab-log").classList.contains("hidden")) refreshFullLog();
+    };
+    document.getElementById("btnRefresh").onclick = async () => { await loadProjects(); await refresh(); };
+    document.getElementById("btnWikiRefresh").onclick = () => refreshWiki();
+    document.querySelectorAll("#wikiSubtabs button").forEach((b) => {
+      b.onclick = () => showWikiView(b.dataset.wikiView);
+    });
+    document.getElementById("btnLogRefresh").onclick = () => refresh().then(refreshFullLog);
+    document.getElementById("logFilter").oninput = () => refreshFullLog();
+    document.getElementById("logTypeFilter").onchange = () => refreshFullLog();
+    document.getElementById("btnPullMail").onclick = async () => {
+      setStatus("pulling attachments…");
+      try {
+        const d = await api(`/api/projects/${projectId}/mail/pull-attachments`, { method: "POST" });
+        setStatus(`pulled ${d.saved?.length||0} → wiki`);
+        await refreshWiki(); await refresh();
+      } catch (e) { setStatus(String(e).slice(0,120)); }
+    };
+    document.getElementById("btnRegForeman").onclick = async () => {
+      await api(`/api/projects/${projectId}/foreman/register`, {
+        method: "POST",
+        body: JSON.stringify({ name: document.getElementById("foremanName").value.trim() || "Foreman" }),
+      });
+      await refresh();
+    };
+    document.getElementById("btnRefreshPair").onclick = () => refreshPairing();
+    document.getElementById("btnApproveForeman").onclick = async () => {
+      const code = document.getElementById("pairCode").value.trim();
+      const person_name = document.getElementById("foremanName").value.trim() || null;
+      try {
+        const data = await api("/api/pairing/approve", {
+          method: "POST",
+          body: JSON.stringify({ code, platform: "telegram", project_id: projectId, bind_role: "foreman", person_name }),
+        });
+        document.getElementById("pairOut").textContent = JSON.stringify(data, null, 2);
+        document.getElementById("pairCode").value = "";
+        await refreshPairing(); await refresh();
+      } catch (e) {
+        document.getElementById("pairOut").textContent = String(e);
+      }
+    };
+    document.getElementById("btnCreateProject").onclick = async () => {
+      const name = document.getElementById("newProjectName").value.trim() || "New site";
+      const inbox_username = document.getElementById("newInboxUser").value.trim() || null;
+      try {
+        const data = await api("/api/projects", {
+          method: "POST",
+          body: JSON.stringify({ name, inbox_username, provision_inbox: true, with_demo_zones: false }),
+        });
+        document.getElementById("createOut").textContent =
+          `${data.project_id}\n${data.inbox_email}\n${data.kb_relpath}\nzones=dynamic (map in Telegram)\nwiki=${JSON.stringify(data.wiki||{})}`;
+        projectId = data.project_id; LS.setProject(projectId);
+        await loadProjects(); await refresh();
+      } catch (e) {
+        document.getElementById("createOut").textContent = String(e);
+      }
+    };
+    document.getElementById("btnSeed").onclick = async () => {
+      const data = await api("/api/seed", { method: "POST" });
+      projectId = data.project_id; LS.setProject(projectId);
+      await loadProjects(); await refresh();
+    };
+    document.getElementById("btnReplay").onclick = async () => {
+      await api(`/api/sim/kaggle_site/play?project_id=${projectId}&speed=20`, { method: "POST" });
+      setStatus("replay playing");
+      const iv = setInterval(async () => {
+        await refresh();
+        const meta = await api(`/api/sim/kaggle_site?project_id=${projectId}`);
+        if (meta.status === "finished" || meta.status === "paused") {
+          clearInterval(iv); setStatus(`sim ${meta.status}`);
+        }
+      }, 800);
+    };
+    document.getElementById("btnResetSim").onclick = async () => {
+      await api(`/api/sim/kaggle_site/reset?project_id=${projectId}`, { method: "POST" });
+      await refresh();
+    };
+
+    (async () => {
+      try {
+        await loadProjects();
+        if (projectId) await refresh();
+        if (!LS.onboarded() || !LS.admin()) showOnboard();
+        else {
+          hideOnboard();
+          renderLocalProfile();
+        }
+      } catch (e) { setStatus(String(e)); }
+      setInterval(() => { if (projectId) refresh().catch(()=>{}); }, 4000);
+    })();
+  </script>
+</body>
+</html>

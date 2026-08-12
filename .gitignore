@@ -1,0 +1,52 @@
+# Python / uv
+apps/api/.venv/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Secrets & runtime
+.env
+.env.*
+!.env.example
+apps/api/.env
+sim/.env.sim
+data/*.db
+data/proofs/*
+!data/proofs/.gitkeep
+kb/projects/
+kb/tenants/
+
+# Large public corpus PDFs (keep markdown indexes + GeoJSON samples)
+kb/samples/wilbarger/*.pdf
+
+# Planning / research dumps (product docs are README.md + deploy/hermes/README.md)
+/DIRECTION_V2.md
+/HERMES_ARCHITECTURE.md
+/KAYA_INTEL.md
+/PITCH_DECK.md
+/PLAN.md
+/PROTOTYPE.md
+/RECON.md
+/RESEARCH.md
+/presentation.html
+/docs/TECH_SPEC.md
+/research/
+/dashboard/
+
+# Node / deck
+deck/node_modules/
+deck/.venv/
+deck/versions/
+deck/slide-*.jpg
+deck/slide9q-*.jpg
+deck/slide-preview-*.jpg
+.firecrawl/
+
+# caches / OS
+*.db-journal
+.DS_Store
+*.log
+cron_inbox_dump.py
+cron_poll.py

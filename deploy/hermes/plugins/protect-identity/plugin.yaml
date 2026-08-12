@@ -1,0 +1,8 @@
+name: protect-identity
+version: 1.0.0
+description: >
+  Block agent edits to operator-owned identity/security files under HERMES_HOME
+  (SOUL.md, config.yaml, .env). MEMORY.md / USER.md via the memory tool remain allowed.
+author: FieldClaw
+hooks:
+  - pre_tool_call

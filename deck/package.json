@@ -1,0 +1,22 @@
+{
+  "name": "deck",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "diagrams": "node render-diagrams.mjs",
+    "deck": "node build-deck.mjs",
+    "build": "node render-diagrams.mjs && node build-deck.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "jsdom": "^29.1.1",
+    "pptxgenjs": "^4.0.1",
+    "roughjs": "^4.6.6",
+    "sharp": "^0.35.3"
+  }
+}

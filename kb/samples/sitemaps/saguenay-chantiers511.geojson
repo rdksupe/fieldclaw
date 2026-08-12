@@ -1,0 +1,1966 @@
+{
+	"type" : "FeatureCollection",
+	"name" : "SAG_Chantiers511",
+	"features" : [
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2086927746, 48.4145102644 ],
+					[ -71.2088055677, 48.4142231187 ],
+					[ -71.2089383439, 48.4139244176 ],
+					[ -71.2092313901, 48.4134096876 ],
+					[ -71.2097412478, 48.4127588646 ],
+					[ -71.2104991839, 48.4117905431 ]
+				]
+			},
+			"properties" : {
+				"id" : 34734,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard René-Lévesque",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de réfection de pavage, le boulevard René-Lévesque en direction sud, sera fermé à la circulation entre la rue Sainte-Émilie et le boulevard du Royaume, du mercredi 12 août à 7 h au mercredi 19 août à 19 h.Des détours seront à prévoir par les rues Sainte-Émilie et Saint-Philippe.Nous vous invitons à prévoir vos déplacements en conséquence.",
+				"date_debut" : "2026-08-12T07:00:00",
+				"date_fin" : "2026-08-19T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0873007046, 48.3821632107 ],
+					[ -71.0887599506, 48.3828850459 ],
+					[ -71.0890267485, 48.3830182413 ],
+					[ -71.089705923, 48.3833209554 ],
+					[ -71.0904613105, 48.3836433255 ],
+					[ -71.0908455942, 48.3837857827 ],
+					[ -71.0914975939, 48.3839902995 ],
+					[ -71.091994657, 48.3841055537 ],
+					[ -71.0926081627, 48.3842162405 ],
+					[ -71.0932743269, 48.3843215548 ],
+					[ -71.0941490316, 48.3843719812 ],
+					[ -71.0956450071, 48.3843959648 ],
+					[ -71.0974736473, 48.3844363255 ],
+					[ -71.0995990049, 48.3844728456 ],
+					[ -71.1000650536, 48.384479478 ],
+					[ -71.1019396275, 48.3845206614 ],
+					[ -71.1028707769, 48.3845583569 ],
+					[ -71.1035465072, 48.3845847162 ],
+					[ -71.1038113254, 48.3846107797 ],
+					[ -71.1043695171, 48.3846415599 ],
+					[ -71.1053908428, 48.3847306554 ],
+					[ -71.1059741545, 48.3848004931 ],
+					[ -71.1068954448, 48.3849278191 ],
+					[ -71.1079157034, 48.3850977704 ],
+					[ -71.1083697972, 48.3851891553 ],
+					[ -71.109114412, 48.3853442428 ],
+					[ -71.1098510644, 48.3855156772 ],
+					[ -71.1110598938, 48.3858388704 ],
+					[ -71.1117194297, 48.3860446834 ],
+					[ -71.1124426813, 48.3862882113 ],
+					[ -71.1134205043, 48.3866588218 ],
+					[ -71.1134657713, 48.3866795975 ],
+					[ -71.1152098259, 48.3874219389 ]
+				]
+			},
+			"properties" : {
+				"id" : 34840,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Royaume Ouest",
+				"arrondissement" : "Chicoutimi",
+				"description" : "AJOUT 6 JUILLET 2026Travaux de remplacement d’une conduite d’eau entraîneront la fermeture de la voie de droite sur le boulevard du Royaume Ouest du #735 jusqu’au boulevard Saint-Paul, et ce, jusqu’au 30 octobre.En raison de travaux de réhabilitation de conduites d’eau potable qui auront lieu du mardi 19 mai à 6 h au vendredi 28 août à 18 h, Il y aura fermeture de la voie de doite sur le boulevard du Royaume Ouest, en direction ouest (vers Jonquière), entre le boulevard Talbot et le #735.",
+				"date_debut" : "2026-05-19T06:00:00",
+				"date_fin" : "2026-10-30T18:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.0849179122, 48.380985434 ],
+						[ -71.0863835243, 48.3817098753 ]
+					],
+					[
+						[ -71.0863835243, 48.3817098753 ],
+						[ -71.0873007046, 48.3821632107 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 34850,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Royaume Ouest",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de réhabilitation sans tranchée par chemisage de conduites d’eau potable qui auront lieu du mardi 19 mai 2026 à 6 h au vendredi 28 août 2026 à 18 h, Il y aura fermeture d’une voie de circulation sur le boulevard du Royaume Ouest, en direction ouest (vers Jonquière), entre le boulevard Talbot et le # civique 735 (Saguenay Balzac portes de garage). ",
+				"date_debut" : "2026-05-19T06:00:00",
+				"date_fin" : "2026-08-28T18:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.1132587808, 48.4362126194 ],
+						[ -71.1128925689, 48.436175627 ],
+						[ -71.1124113766, 48.436145363 ],
+						[ -71.1120158175, 48.4360942265 ],
+						[ -71.110666947, 48.4358300916 ]
+					],
+					[
+						[ -71.1132468521, 48.4362820607 ],
+						[ -71.112893429, 48.436247129 ],
+						[ -71.1124019255, 48.4362088488 ],
+						[ -71.1117310597, 48.436126326 ],
+						[ -71.1106118928, 48.4359238381 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 35062,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Saguenay Ouest",
+				"arrondissement" : "Chicoutimi",
+				"description" : "raison de travaux de réfection de trottoir et de pavage, la circulation se fera en alternance avec signaleurs sur le boulevard du Saguenay Ouest entre la rue Panoramique et le 2041, boulevard du Saguenay (Jonquière) du mercredi 5 août à 7 h au vendredi 21 août à 17 h.Prendre note que la circulation reviendra à la normale en dehors des heures de travaux.",
+				"date_debut" : "2026-08-05T07:00:00",
+				"date_fin" : "2026-08-21T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.0599153572, 48.429082051 ],
+						[ -71.0623070301, 48.4290524011 ],
+						[ -71.0629563365, 48.4291166426 ]
+					],
+					[
+						[ -71.0654170054, 48.4292080454 ],
+						[ -71.0629495382, 48.4289343999 ]
+					],
+					[
+						[ -71.0629495382, 48.4289343999 ],
+						[ -71.0618558526, 48.4289010976 ],
+						[ -71.060660618, 48.4288854562 ],
+						[ -71.059923593, 48.4288955879 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 35085,
+				"municipalite" : "94068",
+				"etat" : "Circulation à contresens",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Saguenay Est",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de réfection d'égout et d'aqueduc, fermeture des deux voies de circulation en direction est sur le boulevard du Saguenay Est, entre les rues de l'Hôtel-de-Ville et La Fontaine. La circulation se fera à contresens (1 voie par direction) sur les voies restantes, entre les rues Morin et La Fontaine. Travaux prévus jusqu'au 6 novembre 2026. Notez que le stationnement de l'hôtel-de-ville de Saguenay n'est pas accessible. ",
+				"date_debut" : "2026-08-03T08:00:00",
+				"date_fin" : "2026-11-06T12:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.3900419172, 48.4672276894 ],
+					[ -71.3901322204, 48.4670967469 ],
+					[ -71.3902119328, 48.4669651416 ],
+					[ -71.3902837523, 48.4668197063 ],
+					[ -71.3903544518, 48.4667369094 ],
+					[ -71.3904971855, 48.4666999725 ],
+					[ -71.3906872768, 48.4666767947 ],
+					[ -71.390897847, 48.4667115973 ],
+					[ -71.3910588991, 48.4667804344 ],
+					[ -71.3915021697, 48.4670281017 ],
+					[ -71.3919012362, 48.4672403476 ],
+					[ -71.3920940933, 48.4673005013 ],
+					[ -71.3922744786, 48.4673190739 ],
+					[ -71.3924409824, 48.4673113324 ],
+					[ -71.3926822568, 48.4672519057 ],
+					[ -71.393130874, 48.4671114824 ],
+					[ -71.3937908432, 48.4669408245 ],
+					[ -71.3945857801, 48.4668057989 ],
+					[ -71.3949653949, 48.4667698525 ],
+					[ -71.3951695721, 48.4667680163 ],
+					[ -71.3953466353, 48.4667869821 ],
+					[ -71.3960998099, 48.4669535383 ],
+					[ -71.3964550047, 48.4670279009 ],
+					[ -71.3995329085, 48.4675444944 ],
+					[ -71.4000069886, 48.4675694415 ],
+					[ -71.4006572209, 48.467594745 ],
+					[ -71.4010343519, 48.4676553024 ],
+					[ -71.4023272289, 48.4680101898 ],
+					[ -71.4027390931, 48.4680927615 ],
+					[ -71.4052414467, 48.4685479397 ],
+					[ -71.4062041023, 48.4687136201 ],
+					[ -71.4093490354, 48.4692583225 ],
+					[ -71.4097795532, 48.4693452843 ],
+					[ -71.4104040159, 48.4694808252 ]
+				]
+			},
+			"properties" : {
+				"id" : 35141,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux d'urgence",
+				"localisation" : "Chemin Saint-Wilbrod",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux, le chemin Saint-Wilbrod à la hauteur du 6105, dans l'arrondissement de Jonquière, sera fermé à la circulation à compter du mercredi 5 août, dès 9 h 30, et ce, pour une durée indéterminée.Les citoyens qui le peuvent sont invités à emprunter le détour par la rue Montée-Bergeron ainsi que par la rue Montée-Dupérré.Nous vous remercions de votre compréhension.",
+				"date_debut" : "2026-08-05T09:30:00",
+				"date_fin" : ""
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.4104040159, 48.4694808252 ],
+					[ -71.4118300818, 48.4697327135 ],
+					[ -71.4124527309, 48.4698499605 ]
+				]
+			},
+			"properties" : {
+				"id" : 35142,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux d'urgence",
+				"localisation" : "Chemin Saint-Wilbrod",
+				"arrondissement" : "Jonquière",
+				"description" : "",
+				"date_debut" : "2026-08-05T09:46:02.666",
+				"date_fin" : ""
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.5578957561, 48.3753983893 ],
+					[ -71.5574991583, 48.3755695738 ],
+					[ -71.5569592308, 48.3757113062 ],
+					[ -71.5566371733, 48.3757535302 ],
+					[ -71.5563084533, 48.3757704558 ],
+					[ -71.5557419849, 48.3757502971 ],
+					[ -71.5544471988, 48.3756615541 ],
+					[ -71.5530566595, 48.3755736741 ],
+					[ -71.5516661261, 48.3754857763 ],
+					[ -71.5501034245, 48.3753847092 ],
+					[ -71.5496285989, 48.3753424146 ],
+					[ -71.5488919689, 48.3751675306 ],
+					[ -71.5483222208, 48.3749273136 ],
+					[ -71.5475270066, 48.3745296318 ],
+					[ -71.5470901692, 48.374363458 ],
+					[ -71.5467843889, 48.3742713489 ],
+					[ -71.5465303695, 48.3742184428 ],
+					[ -71.5462656551, 48.3741828121 ],
+					[ -71.545890832, 48.3741665874 ],
+					[ -71.5455448303, 48.3741787312 ],
+					[ -71.5450468359, 48.3742335656 ],
+					[ -71.544635243, 48.3743277097 ],
+					[ -71.5441565452, 48.3744985126 ],
+					[ -71.5436180464, 48.3747946183 ],
+					[ -71.543368604, 48.3749956635 ],
+					[ -71.5430857611, 48.3753113877 ],
+					[ -71.542667542, 48.3761394668 ],
+					[ -71.5419906656, 48.3775690048 ]
+				]
+			},
+			"properties" : {
+				"id" : 35276,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux d'urgence",
+				"localisation" : "Route des Fondateurs",
+				"arrondissement" : "Lac-Kénogami",
+				"description" : "En raison de travaux de remplacement d’un ponceau, la route des Fondateurs sera fermée à la circulation entre les adresses 285 et 325, du lundi 31 août au vendredi 18 décembre 2026 inclusivement.Nous vous invitons à prévoir vos déplacements en conséquence et à respecter la signalisation en place durant la période des travaux.",
+				"date_debut" : "2026-08-31T07:00:00",
+				"date_fin" : "2026-12-18T16:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.0883895532, 48.4238287135 ],
+						[ -71.0887075154, 48.4236434277 ],
+						[ -71.0889242522, 48.4235445831 ],
+						[ -71.0897164341, 48.4232660139 ],
+						[ -71.0898983009, 48.4231947298 ],
+						[ -71.0910219159, 48.4225705593 ],
+						[ -71.091794735, 48.4221412406 ],
+						[ -71.0920004175, 48.4220493984 ],
+						[ -71.0922066091, 48.4219741127 ],
+						[ -71.0923741305, 48.4219267152 ],
+						[ -71.0936590377, 48.4215774174 ],
+						[ -71.0938419559, 48.4215387972 ]
+					],
+					[
+						[ -71.0872342744, 48.4244640291 ],
+						[ -71.0880573319, 48.4240155787 ],
+						[ -71.0883895532, 48.4238287135 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 35454,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Chemin de la Réserve",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de pavage, il y aura fermeture du chemin de la Réserve entre les rues Legrand et De Quen le jeudi 20 août de 7 h à 17 h. Seule une circulation locale sera permise.Détour par la rue Legrand.",
+				"date_debut" : "2026-08-20T07:00:00",
+				"date_fin" : "2026-08-20T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -70.9819886907, 48.4200369027 ],
+						[ -70.9821443147, 48.4201816464 ],
+						[ -70.982296101, 48.42027827 ],
+						[ -70.9825202823, 48.4203744216 ],
+						[ -70.9827255095, 48.4204288462 ],
+						[ -70.9829736358, 48.4204678484 ],
+						[ -70.9847672116, 48.4205668431 ],
+						[ -70.9850929167, 48.4205843576 ],
+						[ -70.9857622548, 48.4206261723 ],
+						[ -70.9865455381, 48.4206865018 ],
+						[ -70.9872172382, 48.4207983234 ],
+						[ -70.9875783951, 48.4208971814 ],
+						[ -70.9877256912, 48.4209472924 ],
+						[ -70.9879172744, 48.4210263431 ],
+						[ -70.9885085201, 48.4213200025 ],
+						[ -70.9892893266, 48.4216829818 ],
+						[ -70.9901467461, 48.4220317123 ],
+						[ -70.9916395615, 48.4225753636 ],
+						[ -70.9925290306, 48.4228992737 ],
+						[ -70.9934129085, 48.4232299914 ],
+						[ -70.9938363058, 48.4234150972 ],
+						[ -70.9940192321, 48.423514581 ],
+						[ -70.9942179181, 48.4236368331 ],
+						[ -70.9947507332, 48.4240343035 ],
+						[ -70.995246592, 48.4244055956 ],
+						[ -70.9955683272, 48.4246248361 ],
+						[ -70.9960678979, 48.4249320121 ],
+						[ -70.9970931335, 48.4254936829 ],
+						[ -70.99779257, 48.4258800772 ],
+						[ -70.999020968, 48.4265626582 ],
+						[ -70.9995492876, 48.426859311 ],
+						[ -71.0000503496, 48.4271406543 ],
+						[ -71.0004377359, 48.4273502863 ],
+						[ -71.0008400763, 48.4275470483 ],
+						[ -71.0012434744, 48.4277233945 ],
+						[ -71.001760326, 48.4278911843 ],
+						[ -71.0022340427, 48.4279959486 ],
+						[ -71.0031743612, 48.4281961424 ],
+						[ -71.0036436984, 48.4282851862 ],
+						[ -71.0043332954, 48.4284160134 ],
+						[ -71.0050387228, 48.4285019119 ],
+						[ -71.0056613958, 48.4285355135 ],
+						[ -71.0070888807, 48.428604237 ],
+						[ -71.0073034708, 48.4286152405 ],
+						[ -71.0075170291, 48.4286359389 ],
+						[ -71.0079324873, 48.4287117489 ],
+						[ -71.0079968173, 48.4287297008 ],
+						[ -71.0084937195, 48.4288683652 ],
+						[ -71.0088784556, 48.4290049648 ],
+						[ -71.0100544816, 48.4294630982 ],
+						[ -71.0110610762, 48.4298372356 ],
+						[ -71.0113447183, 48.4299426598 ],
+						[ -71.0139543972, 48.4309954869 ],
+						[ -71.0141064416, 48.4311079657 ]
+					],
+					[
+						[ -70.9398292662, 48.3951685488 ],
+						[ -70.9409657356, 48.3957279021 ],
+						[ -70.9411145051, 48.3958014397 ],
+						[ -70.9417387924, 48.3961100212 ],
+						[ -70.9421982118, 48.3963380873 ],
+						[ -70.9424406866, 48.3964584558 ],
+						[ -70.9436022081, 48.3970353363 ],
+						[ -70.9447319109, 48.3975927222 ],
+						[ -70.945534956, 48.3979889245 ],
+						[ -70.9464654338, 48.3984461765 ],
+						[ -70.9487439669, 48.3995354245 ],
+						[ -70.9498084951, 48.4000112574 ],
+						[ -70.9502022782, 48.4001872702 ],
+						[ -70.9510080012, 48.4005460083 ],
+						[ -70.9521089573, 48.4010485112 ],
+						[ -70.9521460352, 48.4010649071 ],
+						[ -70.953439936, 48.4016370484 ],
+						[ -70.9544810544, 48.4020735109 ],
+						[ -70.9545054575, 48.4020842846 ],
+						[ -70.9560574898, 48.4027694676 ],
+						[ -70.9562917181, 48.4028996105 ],
+						[ -70.9566970409, 48.4031545665 ],
+						[ -70.9571076661, 48.4034543786 ],
+						[ -70.9573334349, 48.4036215584 ],
+						[ -70.9579522966, 48.4040240925 ],
+						[ -70.9585235605, 48.4043439631 ],
+						[ -70.9606016683, 48.4054160553 ],
+						[ -70.9619137903, 48.4061046887 ],
+						[ -70.9638532659, 48.4071006506 ],
+						[ -70.9648770949, 48.4076174533 ],
+						[ -70.966526851, 48.4084446474 ],
+						[ -70.9681402195, 48.409267155 ],
+						[ -70.9685534608, 48.409483016 ],
+						[ -70.9687903422, 48.4096201234 ],
+						[ -70.9690028245, 48.409773937 ],
+						[ -70.9691730718, 48.40994769 ],
+						[ -70.9693168113, 48.4101582783 ],
+						[ -70.9694255739, 48.4103882218 ],
+						[ -70.9697134379, 48.4112303193 ],
+						[ -70.9698800963, 48.4117407213 ],
+						[ -70.9699882812, 48.4120229875 ],
+						[ -70.9700617031, 48.412158711 ],
+						[ -70.9702231976, 48.4123885066 ],
+						[ -70.9715397827, 48.4138215297 ],
+						[ -70.9717301277, 48.41406708 ],
+						[ -70.9719558333, 48.4144220852 ],
+						[ -70.9720805228, 48.414662256 ],
+						[ -70.9722016012, 48.4149046495 ],
+						[ -70.9722550079, 48.4150082501 ],
+						[ -70.972345798, 48.4151274546 ],
+						[ -70.9724572888, 48.4152235641 ],
+						[ -70.9725918652, 48.4153064071 ],
+						[ -70.9733533401, 48.4156663102 ],
+						[ -70.9744963161, 48.416169187 ],
+						[ -70.9751859571, 48.4164495949 ],
+						[ -70.9761585597, 48.4167846054 ],
+						[ -70.9763818515, 48.41684412 ],
+						[ -70.9766682605, 48.4169204565 ],
+						[ -70.9779686172, 48.4171660651 ],
+						[ -70.9784052024, 48.4172605725 ],
+						[ -70.9788276695, 48.4173801812 ],
+						[ -70.9791459005, 48.4174991765 ],
+						[ -70.9794399585, 48.4176431154 ],
+						[ -70.9795687538, 48.4177220853 ],
+						[ -70.9798671459, 48.4179232933 ],
+						[ -70.980120691, 48.4181501673 ],
+						[ -70.980826419, 48.4188812324 ],
+						[ -70.9815312171, 48.4196126982 ],
+						[ -70.9815980003, 48.4196820079 ],
+						[ -70.981801941, 48.4198644905 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 35493,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Rang Saint-Joseph",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux d'accotement, le rang Saint-Joseph se fera en circulation par alternance, avec l'aide de signaleurs du mardi 11 août au mercredi 12 août, de 7 h à 17 h.",
+				"date_debut" : "2026-08-11T07:00:00",
+				"date_fin" : "2026-08-12T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.0141064416, 48.4311079657 ],
+						[ -71.0145111062, 48.4299800771 ]
+					],
+					[
+						[ -71.0150894199, 48.4284089254 ],
+						[ -71.0154726549, 48.4276450014 ],
+						[ -71.0161338187, 48.4266333053 ],
+						[ -71.016455272, 48.4261804009 ],
+						[ -71.0171691153, 48.4251746158 ],
+						[ -71.017628791, 48.4245299904 ],
+						[ -71.0180650109, 48.4239182415 ],
+						[ -71.0186809686, 48.423023456 ],
+						[ -71.0187507542, 48.4228859085 ],
+						[ -71.0188020576, 48.4227847921 ],
+						[ -71.0189169399, 48.4224555257 ],
+						[ -71.0189411818, 48.4223868319 ],
+						[ -71.0190524167, 48.4219015004 ],
+						[ -71.0191959068, 48.4212452603 ],
+						[ -71.0192157059, 48.4211602076 ]
+					],
+					[
+						[ -71.0145111062, 48.4299800771 ],
+						[ -71.0148526724, 48.4290064503 ],
+						[ -71.0150894199, 48.4284089254 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 35600,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Rang Saint-Martin",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux d'accotement, le rang Saint-Martin se fera en circulation par alternance, avec la présence de signaleurs, entre le chemin du Golf et le rang Saint-Joseph, le jeudi 13 août, de 7 h à 17 h.Merci de votre collaboration.",
+				"date_debut" : "2026-08-13T07:00:00",
+				"date_fin" : "2026-08-13T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -70.9011600474, 48.2925501349 ],
+					[ -70.901034935, 48.2930186469 ],
+					[ -70.9008275533, 48.2935178634 ],
+					[ -70.9005684854, 48.293963055 ],
+					[ -70.9002456817, 48.2944140073 ],
+					[ -70.8998652767, 48.2948397544 ],
+					[ -70.899658404, 48.2950307696 ],
+					[ -70.8991105776, 48.2955035455 ],
+					[ -70.8988272093, 48.2957377837 ],
+					[ -70.8985197008, 48.2959580472 ],
+					[ -70.8972629515, 48.296744924 ],
+					[ -70.8967888394, 48.2970169964 ],
+					[ -70.8956263739, 48.2976642021 ],
+					[ -70.8950633502, 48.2979776561 ],
+					[ -70.89448627, 48.2982358367 ],
+					[ -70.8940155023, 48.2984296451 ],
+					[ -70.8935638323, 48.2986575537 ],
+					[ -70.8930543169, 48.2989170771 ],
+					[ -70.892078602, 48.2993752596 ],
+					[ -70.8907662928, 48.2999898986 ],
+					[ -70.8906723999, 48.3000415673 ],
+					[ -70.890495833, 48.3001501916 ],
+					[ -70.8903139649, 48.3003016048 ],
+					[ -70.890257322, 48.3003571769 ],
+					[ -70.890256984, 48.3003575855 ],
+					[ -70.8902206589, 48.3004013973 ],
+					[ -70.8900680279, 48.3006245248 ],
+					[ -70.8897420958, 48.3012372882 ],
+					[ -70.8896455306, 48.3013837199 ],
+					[ -70.8895285572, 48.3015220478 ],
+					[ -70.889402819, 48.3016424028 ],
+					[ -70.8892738461, 48.3017453741 ],
+					[ -70.8891084021, 48.3018555416 ],
+					[ -70.8869496299, 48.3030589579 ],
+					[ -70.8868628014, 48.303095693 ],
+					[ -70.8866237617, 48.3031837695 ],
+					[ -70.8863884248, 48.3032547444 ],
+					[ -70.8856916044, 48.3034050882 ],
+					[ -70.8855935703, 48.303426239 ],
+					[ -70.8854220081, 48.3034743538 ],
+					[ -70.8852648541, 48.3035269666 ],
+					[ -70.8849137094, 48.3036789354 ],
+					[ -70.8845289526, 48.3038842988 ],
+					[ -70.8839383882, 48.3041941178 ],
+					[ -70.8837574029, 48.304302518 ],
+					[ -70.8836041486, 48.3044072826 ],
+					[ -70.8834317016, 48.3045422321 ],
+					[ -70.8833113837, 48.3046499392 ],
+					[ -70.8826606989, 48.3053804318 ],
+					[ -70.8825174636, 48.3055226731 ],
+					[ -70.8822592931, 48.3057516443 ],
+					[ -70.8819503375, 48.3059890464 ],
+					[ -70.8816911252, 48.3061637552 ],
+					[ -70.8815163464, 48.3062709513 ],
+					[ -70.8811816709, 48.3064549842 ],
+					[ -70.881021892, 48.3065425434 ],
+					[ -70.8799049735, 48.3071546005 ],
+					[ -70.8786752857, 48.3078327302 ],
+					[ -70.8781538134, 48.3081557035 ],
+					[ -70.8779437926, 48.3082986533 ],
+					[ -70.8773797809, 48.3087173981 ],
+					[ -70.8769604789, 48.3090391682 ],
+					[ -70.8765433297, 48.3093194564 ],
+					[ -70.876113411, 48.3095669467 ],
+					[ -70.8760773078, 48.3095856977 ],
+					[ -70.8757561064, 48.3097525182 ],
+					[ -70.8753992286, 48.3099196017 ],
+					[ -70.8750819255, 48.3100546874 ],
+					[ -70.8745492457, 48.3102643696 ],
+					[ -70.8741545403, 48.3104455194 ],
+					[ -70.8738917713, 48.3106273085 ],
+					[ -70.8733317867, 48.3111337523 ],
+					[ -70.8727738156, 48.3116387937 ],
+					[ -70.8725641598, 48.311832562 ],
+					[ -70.8724147923, 48.3119559158 ],
+					[ -70.8722385414, 48.3120885491 ],
+					[ -70.8719129932, 48.3123032282 ],
+					[ -70.871599947, 48.3124791602 ],
+					[ -70.8712449973, 48.3126490603 ],
+					[ -70.8693843913, 48.3134227657 ],
+					[ -70.8685704149, 48.3136858949 ],
+					[ -70.8678308428, 48.3139076094 ],
+					[ -70.8676187276, 48.3139774533 ],
+					[ -70.8668906811, 48.3142952665 ],
+					[ -70.8661626254, 48.3146130741 ],
+					[ -70.8658334478, 48.3147080164 ],
+					[ -70.8655881603, 48.3147608644 ],
+					[ -70.8653588144, 48.3147929472 ]
+				]
+			},
+			"properties" : {
+				"id" : 35811,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Chemin Saint-Jean",
+				"arrondissement" : "La Baie",
+				"description" : "En raison de travaux de pavage sur le chemin Saint-Jean, la circulation se fera en alternance avec feux, entre les adresses 3582 et 2503, du 3 au 13 août 2026, de 7 h à 17 h.",
+				"date_debut" : "2026-08-03T07:00:00",
+				"date_fin" : "2026-08-13T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -70.7393990241, 48.3517876948 ],
+					[ -70.7384551389, 48.3515586637 ],
+					[ -70.7378961331, 48.3514957203 ],
+					[ -70.7372125004, 48.3514663746 ],
+					[ -70.7365343042, 48.351424288 ],
+					[ -70.7358693895, 48.3512965578 ],
+					[ -70.7352966255, 48.35117393 ],
+					[ -70.7347244783, 48.3510201781 ],
+					[ -70.7345585984, 48.3509646191 ],
+					[ -70.7344058703, 48.3508736194 ],
+					[ -70.7342482038, 48.3507725563 ],
+					[ -70.7341262924, 48.3506855794 ],
+					[ -70.7337871116, 48.3504710387 ],
+					[ -70.7336350004, 48.3503960081 ],
+					[ -70.7334440014, 48.350309008 ],
+					[ -70.7332487372, 48.3502540976 ],
+					[ -70.7332474672, 48.3502540274 ],
+					[ -70.7330534584, 48.3502432267 ],
+					[ -70.7329157265, 48.3502491395 ],
+					[ -70.7324054911, 48.3502971225 ],
+					[ -70.7312605714, 48.3504138418 ],
+					[ -70.7310685471, 48.3504176265 ],
+					[ -70.7309189793, 48.350414528 ],
+					[ -70.7308237826, 48.3504090556 ],
+					[ -70.7307081477, 48.3503934286 ],
+					[ -70.7305244171, 48.3503518833 ],
+					[ -70.7303645084, 48.3503170868 ],
+					[ -70.7301637123, 48.350259717 ],
+					[ -70.7300497003, 48.3502270937 ],
+					[ -70.7299337815, 48.3501920054 ],
+					[ -70.7298469069, 48.3501586891 ],
+					[ -70.729280396, 48.3499726188 ],
+					[ -70.7286266458, 48.3497145102 ],
+					[ -70.7282916284, 48.3496642005 ],
+					[ -70.7278514221, 48.3496537454 ],
+					[ -70.7275693473, 48.3496616662 ],
+					[ -70.7273467609, 48.3496711686 ],
+					[ -70.7271174623, 48.3496999417 ],
+					[ -70.7266571045, 48.3497537925 ],
+					[ -70.7264190854, 48.3497763729 ],
+					[ -70.7262445897, 48.3497820676 ],
+					[ -70.7261030156, 48.3497831617 ],
+					[ -70.7258190487, 48.3497793026 ]
+				]
+			},
+			"properties" : {
+				"id" : 35864,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Chemin de la Batture",
+				"arrondissement" : "La Baie",
+				"description" : "En raison de travaux de pavage sur le chemin de la Batture, face au 9122, il y aura une circulation en alternance avec feux, ce jeudi 13 août, entre 7 h et 17 h.",
+				"date_debut" : "2026-08-13T07:00:00",
+				"date_fin" : "2026-08-13T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2666599231, 48.5505186317 ],
+					[ -71.2664436837, 48.5505394952 ],
+					[ -71.2662083358, 48.5505440566 ],
+					[ -71.2660204673, 48.5505253875 ],
+					[ -71.2650546841, 48.5503723875 ],
+					[ -71.2641303545, 48.5502789323 ],
+					[ -71.2621225003, 48.5499834992 ],
+					[ -71.2617845089, 48.5499608379 ],
+					[ -71.2614094517, 48.5499682988 ],
+					[ -71.2610575009, 48.5500154433 ],
+					[ -71.2605642659, 48.5501481746 ],
+					[ -71.2601763662, 48.5503001275 ],
+					[ -71.2599523951, 48.5504464347 ],
+					[ -71.2598076403, 48.550540994 ],
+					[ -71.2595994175, 48.5506118139 ],
+					[ -71.259350232, 48.5506348259 ],
+					[ -71.2586825197, 48.5506605961 ],
+					[ -71.2580787975, 48.5506592306 ],
+					[ -71.2577815617, 48.5506985815 ],
+					[ -71.2574687025, 48.5507700861 ],
+					[ -71.2570449961, 48.550965183 ],
+					[ -71.256429791, 48.5512737198 ],
+					[ -71.2562457848, 48.5513497167 ],
+					[ -71.2560369184, 48.551377798 ],
+					[ -71.2548213274, 48.5513697482 ],
+					[ -71.2545885524, 48.5514140104 ],
+					[ -71.2544124341, 48.5514792682 ],
+					[ -71.2541216754, 48.5519754066 ],
+					[ -71.2540056904, 48.5522177006 ],
+					[ -71.2537168056, 48.5525250691 ],
+					[ -71.2533414471, 48.5528215501 ],
+					[ -71.2530320459, 48.5531049147 ],
+					[ -71.2527397877, 48.5534172034 ],
+					[ -71.2524907762, 48.5536595407 ],
+					[ -71.252297026, 48.553786816 ],
+					[ -71.2518329147, 48.5539196764 ],
+					[ -71.2513616318, 48.5539571189 ],
+					[ -71.2503715122, 48.5539292103 ],
+					[ -71.2499445111, 48.5538479858 ],
+					[ -71.2495600476, 48.5537007496 ],
+					[ -71.2493160705, 48.5535867955 ],
+					[ -71.2490470718, 48.5533959761 ]
+				]
+			},
+			"properties" : {
+				"id" : 36004,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Route de Portage-Lapointe",
+				"arrondissement" : "Shipshaw",
+				"description" : "En raison d'un glissement de terrain qui s'est produit en mai 2026, la circulation sur la route de Portage-Lapointe se fera en alternance, à l'aide de feux de chantier, sur une distance d'environ 40 mètres.Cette signalisation temporaire sera en place au moins jusqu'au printemps 2027.Merci de votre compréhension et de votre prudence à l'approche de cette zone de travaux.",
+				"date_debut" : "2026-07-29T15:21:59.633",
+				"date_fin" : "2027-05-31T18:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.1241566521, 48.4374243197 ],
+						[ -71.1234040508, 48.4372386585 ]
+					],
+					[
+						[ -71.1147469654, 48.4362484538 ],
+						[ -71.1166754059, 48.4362919424 ],
+						[ -71.1176132045, 48.4363107017 ],
+						[ -71.1181395965, 48.4363407255 ],
+						[ -71.1187411901, 48.4363952644 ],
+						[ -71.1195255178, 48.4364975256 ],
+						[ -71.1199964409, 48.4365856124 ],
+						[ -71.1204008682, 48.4366649927 ],
+						[ -71.1213738047, 48.4368772374 ],
+						[ -71.1219335988, 48.4369931553 ],
+						[ -71.1225907006, 48.4371311997 ],
+						[ -71.1234040508, 48.4372386585 ]
+					],
+					[
+						[ -71.1147477718, 48.4362914303 ],
+						[ -71.1166345549, 48.4363275611 ],
+						[ -71.1175796025, 48.4363474143 ],
+						[ -71.1181213418, 48.4363796212 ],
+						[ -71.1185321061, 48.4364204596 ],
+						[ -71.1192719964, 48.4365082357 ],
+						[ -71.1198281004, 48.4366015282 ],
+						[ -71.1202682328, 48.4366773188 ],
+						[ -71.121328109, 48.4368992897 ],
+						[ -71.1219050503, 48.4370253107 ],
+						[ -71.1224460525, 48.4371356634 ],
+						[ -71.1233588386, 48.4373000733 ]
+					],
+					[
+						[ -71.1233588386, 48.4373000733 ],
+						[ -71.1241321484, 48.4374500357 ]
+					],
+					[
+						[ -71.1132587808, 48.4362126194 ],
+						[ -71.1134186068, 48.4362402493 ],
+						[ -71.1147469654, 48.4362484538 ]
+					],
+					[
+						[ -71.1132468521, 48.4362820607 ],
+						[ -71.1139887368, 48.436297813 ],
+						[ -71.1147477718, 48.4362914303 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 36096,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Saguenay Ouest",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de réfection de trottoir et de pavage, la circulation se fera en alternance avec signaleurs sur le boulevard du Saguenay Ouest entre la rue Panoramique et le 2041, boulevard du Saguenay (Jonquière) du mercredi 5 août à 7 h au vendredi 21 août à 17 h.Prendre note que la circulation reviendra à la normale en dehors des heures de travaux.",
+				"date_debut" : "2026-08-05T07:00:00",
+				"date_fin" : "2026-08-21T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.0317436123, 48.411874625 ],
+						[ -71.0320554792, 48.4118335815 ],
+						[ -71.0326203183, 48.411748917 ],
+						[ -71.0328226537, 48.4117245224 ]
+					],
+					[
+						[ -71.0328326718, 48.4118042518 ],
+						[ -71.032640805, 48.4118273838 ],
+						[ -71.0320693195, 48.4119033505 ],
+						[ -71.0317466997, 48.411945809 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 37665,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard de l'Université Est",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison des travaux de forages à effectuer par le Ministère des transports et de la mobilité durable, il y aura fermeture d'une voie sur 2 dans les deux directions sur le boulevard de l'Université Est, sur le pont au-dessus de la rivière du Moulin, du lundi 10 août à 7 h au vendredi 14 août à 17 h.",
+				"date_debut" : "2026-08-10T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.1259800417, 48.4378552317 ],
+						[ -71.1257090552, 48.4377945821 ],
+						[ -71.1246672446, 48.4375529514 ],
+						[ -71.1241566521, 48.4374243197 ]
+					],
+					[
+						[ -71.1241321484, 48.4374500357 ],
+						[ -71.1242145765, 48.4374660204 ],
+						[ -71.1247410388, 48.437599586 ],
+						[ -71.1257258112, 48.4378421009 ],
+						[ -71.1260444697, 48.4379061921 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 37692,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Saguenay",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de réfection de trottoir et de pavage, la circulation se fera en alternance avec signaleurs sur le boulevard du Saguenay Ouest entre la rue Panoramique et le 2041, boulevard du Saguenay (Jonquière) du mercredi 5 août à 7 h au vendredi 21 août à 17 h.Prendre note que la circulation reviendra à la normale en dehors des heures de travaux.",
+				"date_debut" : "2026-08-05T07:00:00",
+				"date_fin" : "2026-08-21T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0756376674, 48.426111915 ],
+					[ -71.075648684, 48.4261245304 ],
+					[ -71.075786934, 48.4263002859 ],
+					[ -71.0758534228, 48.4263919308 ],
+					[ -71.0759251849, 48.4264760412 ],
+					[ -71.075996493, 48.4265582291 ]
+				]
+			},
+			"properties" : {
+				"id" : 37697,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Price Ouest",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison des travaux de forages à effectuer par le Ministère des transports et de la mobilité durable, il y aura circulation en alternance avec feu ou à l'aide de signaleurs sur la rue Price Ouest, sur le pont au-dessus de la rivière Chicoutimi, du lundi 10 août à 7 h au vendredi 14 août à 17 h.",
+				"date_debut" : "2026-08-10T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.12813924, 48.3914427183 ],
+						[ -71.1287535944, 48.3913836919 ]
+					],
+					[
+						[ -71.1287493878, 48.3913383072 ],
+						[ -71.1280960492, 48.3913992363 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 37753,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Royaume Ouest",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison des travaux de forages à effectuer par le Ministère des transports et de la mobilité durable, il y aura fermeture d'une voie sur 2 dans les deux directions sur le boulevard du Royaume Ouest, sur le pont au-dessus de la rivière Chicoutimi, du lundi 10 août à 7 h au vendredi 14 août à 17 h.",
+				"date_debut" : "2026-08-10T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2608190538, 48.4145151386 ],
+					[ -71.261095967, 48.414702053 ],
+					[ -71.2615204929, 48.4149154528 ],
+					[ -71.262190199, 48.4152562244 ],
+					[ -71.2623428921, 48.4153276904 ],
+					[ -71.2625084466, 48.4153850836 ],
+					[ -71.262828045, 48.4154648585 ],
+					[ -71.2628661629, 48.4154710374 ],
+					[ -71.2629051723, 48.4154682523 ],
+					[ -71.2629409778, 48.4154576692 ],
+					[ -71.2629730999, 48.4154337905 ],
+					[ -71.2629867421, 48.415405299 ]
+				]
+			},
+			"properties" : {
+				"id" : 2772897,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Monseigneur-Plessis",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de pavage, il y aura fermeture des rues Saint-Edmond et Monseigneur-Plessis, du 3 au 14 août 2026, de 7 h à 17 h. Seule une circulation locale sera permise.",
+				"date_debut" : "2026-08-03T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2427190413, 48.4241665468 ],
+					[ -71.2441971812, 48.424316615 ]
+				]
+			},
+			"properties" : {
+				"id" : 2772996,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Activité diverse",
+				"localisation" : "Rue Ball",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de l'évènement Kenogami en Fête, la circulation sera en sens unique sur la rue Ball en direction ouest, du mercredi 19 août à 6 h au lundi 24 août à 17 h.",
+				"date_debut" : "2026-08-19T06:00:00",
+				"date_fin" : "2026-08-24T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2428847336, 48.4235117503 ],
+					[ -71.2443545567, 48.4236581961 ]
+				]
+			},
+			"properties" : {
+				"id" : 2772997,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Activité diverse",
+				"localisation" : "Rue Bradet",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de l'évènement Kenogami en Fête, seule une circulation locale sera permise sur la rue Bradet, entre les rues Price et Bésy, du mercredi 19 août à 6 h au lundi 24 août à 17 h.",
+				"date_debut" : "2026-08-19T06:00:00",
+				"date_fin" : "2026-08-24T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0837903261, 48.416181849 ],
+					[ -71.08519197, 48.4151921494 ]
+				]
+			},
+			"properties" : {
+				"id" : 2774193,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Comeau",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de pavage, il y aura fermeture de la rue Comeau entre les rues Nio et Sainte-Thérèse, le mardi 18 août de 7 h à 17 h. Ces travaux sont sujets aux conditions météorologiques.",
+				"date_debut" : "2026-08-18T07:00:00",
+				"date_fin" : "2026-08-18T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0501064086, 48.4274890376 ],
+					[ -71.0500787364, 48.427461592 ],
+					[ -71.050068892, 48.4274291955 ],
+					[ -71.0505608661, 48.4253033547 ]
+				]
+			},
+			"properties" : {
+				"id" : 2774437,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Saint-Vallier",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de réfection de trottoirs, il y aura femeture de la rue Saint-Vallier en direction nord à partir de la rue Jacques-Cartier Est jusqu'à l'entrée de l'hôpital du mardi 11 août au jeudi 13 août, de 7 h 30 à 17 h.",
+				"date_debut" : "2026-08-11T07:30:00",
+				"date_fin" : "2026-08-13T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.5405943627, 48.3895087426 ],
+					[ -71.540353355, 48.389088398 ],
+					[ -71.5393610131, 48.3871942454 ],
+					[ -71.5392082365, 48.3868938355 ],
+					[ -71.5389937077, 48.3864812337 ],
+					[ -71.5388007834, 48.3860401843 ],
+					[ -71.5386930265, 48.3854769449 ],
+					[ -71.5386819026, 48.3850082725 ],
+					[ -71.5387956933, 48.3844251489 ],
+					[ -71.539148037, 48.38357627 ]
+				]
+			},
+			"properties" : {
+				"id" : 2775860,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux d'urgence",
+				"localisation" : "Route des Fondateurs",
+				"arrondissement" : "Lac-Kénogami",
+				"description" : "En raison de l’apparition d’une cheminée dans la chaussée, il y a fermeture de la voie en direction sud sur la route des Fondateurs entre le 450 et le 462.  Cette mesure vise à éviter qu’un usager de la route ait un accident et que le trou ne s’aggrave avec le passage des véhicules. La route des Fondateurs restera donc ouverte et aucun chemin de détour n’est nécessaire. La circulation se fera en alternance à cette hauteur.",
+				"date_debut" : "2026-06-11T15:53:38.052",
+				"date_fin" : ""
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.224322918, 48.4151456559 ],
+					[ -71.2236545558, 48.4150666576 ],
+					[ -71.2228534419, 48.4149714515 ],
+					[ -71.2223277508, 48.4149085207 ],
+					[ -71.2219479397, 48.4148495955 ],
+					[ -71.2213539204, 48.4147437536 ]
+				]
+			},
+			"properties" : {
+				"id" : 2775928,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Royaume",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de pavage, la circulation s'effectuera à contresens sur une seule voie sur le boulevard du Royaume, entre les rues Stanley et des Étudiants, du mercredi 5 août à compter de 7 h, jusqu'au vendredi 14 août 17 h.",
+				"date_debut" : "2026-08-05T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2283552028, 48.4140098492 ],
+					[ -71.2282453136, 48.4141395472 ],
+					[ -71.2280650827, 48.4143967933 ],
+					[ -71.2278292091, 48.4146121206 ],
+					[ -71.2275191857, 48.4148279171 ],
+					[ -71.2272000602, 48.414983458 ],
+					[ -71.2268556692, 48.415100776 ],
+					[ -71.2264532903, 48.4151965274 ],
+					[ -71.2261160438, 48.4152370377 ],
+					[ -71.2257949593, 48.4152555125 ],
+					[ -71.2252672015, 48.4152259414 ],
+					[ -71.2246799864, 48.415157036 ],
+					[ -71.2244671359, 48.4151311194 ],
+					[ -71.224322918, 48.4151456559 ]
+				]
+			},
+			"properties" : {
+				"id" : 2775929,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Royaume",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de pavage, la circulation s'effectuera à contresens sur une seule voie sur le boulevard du Royaume, entre les rues Stanley et des Étudiants, du mercredi 5 août à compter de 7 h, jusqu'au vendredi 14 août à 17 h.",
+				"date_debut" : "2026-08-05T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2287836997, 48.4135022881 ],
+					[ -71.2283552028, 48.4140098492 ]
+				]
+			},
+			"properties" : {
+				"id" : 2775930,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Royaume",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de pavage, la circulation s'effectuera à contresens sur une seule voie sur le boulevard du Royaume, entre les rues Stanley et des Étudiants, du mercredi 5 août à compter de 7 h jusqu'au vendredi 14 août à 17 h.",
+				"date_debut" : "2026-08-05T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.2646835166, 48.4104923738 ],
+						[ -71.2651684578, 48.4107490935 ],
+						[ -71.2652911871, 48.4108029047 ],
+						[ -71.2654233918, 48.4108456225 ],
+						[ -71.2664341832, 48.411063101 ]
+					],
+					[
+						[ -71.2664341832, 48.411063101 ],
+						[ -71.2667968321, 48.4111404142 ],
+						[ -71.2668898735, 48.4111666842 ],
+						[ -71.2669597351, 48.4112012796 ],
+						[ -71.2670076982, 48.4112389431 ],
+						[ -71.2670478435, 48.4112819174 ],
+						[ -71.267078391, 48.4113428914 ],
+						[ -71.2670882433, 48.4114002709 ],
+						[ -71.2670683753, 48.4114798756 ],
+						[ -71.2669465829, 48.4116538783 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 2776251,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Leblanc",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de remplacement des infrastructures municipales, la rue Leblanc sera fermée à la circulation entre les rues Sainte-Gertrude et du Vieux-Pont, à compter du lundi 20 juillet à 6 h, jusqu'au vendredi 9 octobre à 17 h.Une circulation locale sera permise durant les travaux et un détour sera mis en place par la rue Saint-Jean-Baptiste.",
+				"date_debut" : "2026-07-20T06:00:00",
+				"date_fin" : "2026-10-09T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2629867421, 48.415405299 ],
+					[ -71.2631588312, 48.4148167921 ]
+				]
+			},
+			"properties" : {
+				"id" : 2776365,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Saint-Edmond",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de pavage, il y aura fermeture des rues Saint-Edmond et Monseigneur-Plessis, du 3 au 14 août 2026, de 7 h à 17 h. Seule une circulation locale sera permise.",
+				"date_debut" : "2026-08-03T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2590511757, 48.3999484634 ],
+					[ -71.2593544705, 48.4000184407 ],
+					[ -71.2596299114, 48.4001020047 ],
+					[ -71.259961757, 48.4002260353 ]
+				]
+			},
+			"properties" : {
+				"id" : 2776818,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue des Pinsons",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de réfection de bordures et de trottoirs, la circulation sera limitée aux résidents sur les tronçons suivants :Rue des Pinsons, entre la rue Alouette et la rue des Hirondelles;Rue des Hirondelles, entre la rue Pelletin et la rue des Pinsons.Ces restrictions seront en vigueur du mardi 11 août 2026 à 7 h au mardi 18 août 2026 à 17 h.Nous demandons également aux citoyens concernés de ne pas stationner leur véhicule dans la rue pendant la durée des travaux.",
+				"date_debut" : "2026-08-11T07:00:00",
+				"date_fin" : "2026-08-18T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.255478849, 48.4005976596 ],
+					[ -71.2559735498, 48.4004931743 ],
+					[ -71.2561744061, 48.4004393684 ],
+					[ -71.2563828929, 48.4003979345 ],
+					[ -71.2566123934, 48.4003675513 ],
+					[ -71.256825328, 48.400357576 ]
+				]
+			},
+			"properties" : {
+				"id" : 2776824,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue des Hirondelles",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de réfection de bordures et de trottoirs, la circulation sera limitée aux résidents sur les tronçons suivants :Rue des Pinsons, entre la rue Alouette et la rue des Hirondelles;Rue des Hirondelles, entre la rue Pelletin et la rue des Pinsons.Ces restrictions seront en vigueur du mardi 11 août 2026 à 7 h au mardi 18 août 2026 à 17 h.Nous demandons également aux citoyens concernés de ne pas stationner leur véhicule dans la rue pendant la durée des travaux.",
+				"date_debut" : "2026-08-11T07:00:00",
+				"date_fin" : "2026-08-18T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2444773459, 48.4175575692 ],
+					[ -71.2463685776, 48.4178320515 ]
+				]
+			},
+			"properties" : {
+				"id" : 2777011,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Saint-Laurent",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de pavage, la rue Saint-Laurent sera fermée à la circulation entre les rues Saint-Hubert et Saint-Émile, du jeudi 6 août à 7 h jusqu'au jeudi 13 août à 17 h.Seule une circulation locale sera permise durant les travaux.",
+				"date_debut" : "2026-08-06T07:00:00",
+				"date_fin" : "2026-08-13T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2425714892, 48.4247599703 ],
+					[ -71.2427190413, 48.4241665468 ]
+				]
+			},
+			"properties" : {
+				"id" : 2777126,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Activité diverse",
+				"localisation" : "Rue Price",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de l'évènement Kenogami en Fête, seule une circulation locale sera permise sur la rue Price, entre les rues du Roi-Georges et Ball, du mercredi 19 août à 6 h au lundi 24 août à 17 h.",
+				"date_debut" : "2026-08-19T06:00:00",
+				"date_fin" : "2026-08-24T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.2427870977, 48.4238911358 ],
+						[ -71.2428847336, 48.4235117503 ]
+					],
+					[
+						[ -71.2427190413, 48.4241665468 ],
+						[ -71.2427870977, 48.4238911358 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 2777127,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Activité diverse",
+				"localisation" : "Rue Price",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de l'évènement Kenogami en Fête, il y aura fermeture complète de la rue Price, entre les rues Bradet et Ball, du mercredi 19 août à 6 h au lundi 24 août à 17 h.",
+				"date_debut" : "2026-08-19T06:00:00",
+				"date_fin" : "2026-08-24T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2414740574, 48.4237117323 ],
+					[ -71.2420689662, 48.4237947092 ],
+					[ -71.2427870977, 48.4238911358 ]
+				]
+			},
+			"properties" : {
+				"id" : 2777416,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Activité diverse",
+				"localisation" : "Rue De Montcalm",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de l'évènement Kenogami en Fête, il y aura fermeture complète de la rue De Montcalm, entre la rue Price et le stationnement de la SQDC de de Kénogamie du mercredi 19 août à 6 h au lundi 24 août à 17 h.",
+				"date_debut" : "2025-08-19T06:00:00",
+				"date_fin" : "2026-08-24T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.173595648, 48.4077261362 ],
+						[ -71.1741335187, 48.4077690475 ],
+						[ -71.1744881855, 48.4078194602 ],
+						[ -71.1746610922, 48.407850928 ]
+					],
+					[
+						[ -71.1746610922, 48.407850928 ],
+						[ -71.1753771888, 48.407991565 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 2777543,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Tremblay",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de réfection de bordures, la rue Tremblay sera fermée à la circulation entre les rues Lafrance et Lévesque ainsi que l'accès au 2330, rue Lévesque, du lundi 3 août à compter de 7 h jusqu'au jeudi le 13 août à 17 h.Seule la circulation locale sera permise durant les travaux.",
+				"date_debut" : "2026-08-03T07:00:00",
+				"date_fin" : "2026-08-13T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.1732968601, 48.4091840257 ],
+					[ -71.1735137675, 48.4089719064 ],
+					[ -71.1735666125, 48.4088813619 ],
+					[ -71.1735891509, 48.4087770552 ],
+					[ -71.1735882208, 48.4085902291 ],
+					[ -71.1735915664, 48.4082763811 ],
+					[ -71.1735958381, 48.4079707751 ],
+					[ -71.173595648, 48.4077261362 ]
+				]
+			},
+			"properties" : {
+				"id" : 2777548,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Lévesque",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de réfection de bordures, la rue Lévesque sera fermée à la circulation entre la rue Tremblay et le 2330, rue Lévesque, du lundi 3 août à compter de 7 h jusqu'au jeudi le 13 août à 17 h.Seule la circulation locale sera permise durant les travaux.",
+				"date_debut" : "2026-08-03T07:00:00",
+				"date_fin" : "2026-08-13T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.1733336319, 48.4227158322 ],
+					[ -71.1760748276, 48.4220366803 ]
+				]
+			},
+			"properties" : {
+				"id" : 2777781,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue De La Salle",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de réfection de pavage, la rue De La Salle sera fermée entre les rues Gilbert et Hudson, du jeudi le 6 août à 7 h jusqu'au vendredi 14 août à 17 h.Seule une circulation locale sera permise durant les travaux.",
+				"date_debut" : "2026-08-06T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.1729402138, 48.4219606335 ],
+						[ -71.172914819, 48.4218732228 ],
+						[ -71.1728778556, 48.4214415744 ]
+					],
+					[
+						[ -71.1733336319, 48.4227158322 ],
+						[ -71.1731229983, 48.4222959784 ],
+						[ -71.1729402138, 48.4219606335 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 2777822,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Hudson",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de réfection de pavage, la rue Hudsone sera fermée entre les rues de De La Salle et Juchereau, du jeudi le 6 août à 7 h jusqu'au vendredi 14 août à 17 h.Seule une circulation locale sera permise durant les travaux.",
+				"date_debut" : "2026-08-06T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0249804833, 48.4278289651 ],
+					[ -71.0240045423, 48.4273554158 ],
+					[ -71.0232804094, 48.4269652161 ]
+				]
+			},
+			"properties" : {
+				"id" : 2777920,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Saguenay Est",
+				"arrondissement" : "Chicoutimi",
+				"description" : "Des travaux  de réfection d'égout, d'eau potable et de la chaussée  auront lieu du mardi 19 mai à 7 h au vendredi 21 août. Il y aura fermeture : - du boulevard du Saguenay Est, entre les rues de Normandie et de Paris;- de la rue de Paris, entre le boulevard du Saguenay Est et la rue de la Terrasse.Des détours seront possibles dans le secteur. Prévoir vos déplacements en conséquence.",
+				"date_debut" : "2026-05-19T07:00:00",
+				"date_fin" : "2026-08-21T12:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0232804094, 48.4269652161 ],
+					[ -71.0225514283, 48.4265733134 ]
+				]
+			},
+			"properties" : {
+				"id" : 2777921,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard du Saguenay Est",
+				"arrondissement" : "Chicoutimi",
+				"description" : "Des travaux  de réfection d'égout, d'eau potable et de la chaussée  auront lieu du mardi 19 mai au vendredi 21 août 17 h. Il y aura fermeture : - du boulevard du Saguenay Est, entre les rues de Normandie et de Paris;- de la rue de Paris, entre le boulevard du Saguenay Est et la rue de la Terrasse.Des détours seront possibles dans le secteur. Prévoir vos déplacements en conséquence.",
+				"date_debut" : "2026-05-19T07:00:00",
+				"date_fin" : "2026-08-21T12:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0806162117, 48.4240523577 ],
+					[ -71.0811667382, 48.4246355035 ],
+					[ -71.0811910091, 48.4246610071 ]
+				]
+			},
+			"properties" : {
+				"id" : 2778820,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Dubuc",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison des travaux de forages à effectuer par le Ministère des transports et de la mobilité durable, il y aura circulation en alternance avec feu ou à l'aide de signaleurs sur la rue Dubuc entre les rues Bossé et Dréan, sur le pont au-dessus de la rivière Chicoutimi, du lundi 10 août à 7 h au vendredi 14 août à 17 h.",
+				"date_debut" : "2026-08-10T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.0765367927, 48.4201691858 ],
+						[ -71.0771687558, 48.4204525249 ]
+					],
+					[
+						[ -71.0771687558, 48.4204525249 ],
+						[ -71.0777280482, 48.4207032009 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 2778948,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Fafard",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de réfection de trottoirs, il y aura fermeture de la rue Fafard entre les rues Taché et Saint-Paul du lundi 17 août au mercredi 26 août 2026, de 7 h à 17 h. Seule une circulation locale sera permise.",
+				"date_debut" : "2026-08-17T07:00:00",
+				"date_fin" : "2026-08-26T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.082536327, 48.4160478233 ],
+					[ -71.0828949971, 48.4161937261 ],
+					[ -71.0830020607, 48.4162230803 ],
+					[ -71.0832860007, 48.4162475131 ],
+					[ -71.0834559551, 48.4162583921 ],
+					[ -71.0835515933, 48.416260018 ],
+					[ -71.0836448227, 48.4162457296 ],
+					[ -71.0837231376, 48.4162194039 ],
+					[ -71.0837903261, 48.416181849 ]
+				]
+			},
+			"properties" : {
+				"id" : 2778968,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Saint-Gabriel",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de pavage, il y aura fermeture de la rue Comeau entre les rues Nio et Sainte-Thérèse, le mardi 18 août de 7 h à 17 h. Ces travaux sont sujets aux conditions météorologiques.",
+				"date_debut" : "2026-08-18T07:00:00",
+				"date_fin" : "2026-08-18T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0753403986, 48.4170480924 ],
+					[ -71.0762960253, 48.4159999816 ],
+					[ -71.0768641242, 48.4153781116 ]
+				]
+			},
+			"properties" : {
+				"id" : 2779272,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Boily",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de réfection de trottoirs, il y aura fermeture de la rue Boily entre les rues Thomas-Duperré et des Oblats Ouest du mardi 11 août à 13 h vendredi 14 août à 17 h.",
+				"date_debut" : "2026-08-11T13:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.0494957176, 48.4427782051 ],
+						[ -71.0515351862, 48.4417653033 ],
+						[ -71.0522350041, 48.4414258338 ],
+						[ -71.0526401565, 48.4413131297 ],
+						[ -71.0530802328, 48.4412605222 ],
+						[ -71.0533854302, 48.4412573875 ],
+						[ -71.0534744685, 48.4412700292 ]
+					],
+					[
+						[ -71.0462565904, 48.4436761511 ],
+						[ -71.0470123017, 48.443552759 ],
+						[ -71.0476701512, 48.4434069438 ],
+						[ -71.048401437, 48.4431943248 ],
+						[ -71.0489916929, 48.4429781433 ],
+						[ -71.0494957176, 48.4427782051 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 2779579,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard de Tadoussac",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de réfection majeure des conduites d'égouts,  il y aura fermeture d'une voie sur 2 dans les deux directions sur le boulevard de Tadoussac entre les rues Viau et Saint-Émile du lundi 27 juillet 2026 au vendredi 2 octobre 2026.",
+				"date_debut" : "2026-07-27T07:00:00",
+				"date_fin" : "2026-10-02T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.0646436581, 48.4049499836 ],
+						[ -71.0648310402, 48.4045945143 ],
+						[ -71.0649786459, 48.4043071395 ]
+					],
+					[
+						[ -71.0637554729, 48.4054266347 ],
+						[ -71.0643578319, 48.4051507268 ],
+						[ -71.0644842592, 48.4050895515 ],
+						[ -71.064574097, 48.4050250112 ],
+						[ -71.0646436581, 48.4049499836 ]
+					],
+					[
+						[ -71.0649786459, 48.4043071395 ],
+						[ -71.0653893233, 48.403587012 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 2779708,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue des Maristes",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de pavage, il y aura fermeture de la rue des Maristes entre les rues des Jésuites et des Saguenéens, le mercredi 19 août de 7 h à 17 h. Seule une circulation locale sera permise.Ces travaux sont sujets aux conditions météorologiques.",
+				"date_debut" : "2026-08-19T07:00:00",
+				"date_fin" : "2026-08-19T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0600185773, 48.4275940092 ],
+					[ -71.0601301904, 48.4267033753 ],
+					[ -71.0601679163, 48.4266350352 ],
+					[ -71.0602438427, 48.4265826207 ],
+					[ -71.0605810084, 48.4264122465 ],
+					[ -71.0606033324, 48.4263365434 ]
+				]
+			},
+			"properties" : {
+				"id" : 2779904,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue La Fontaine",
+				"arrondissement" : "Chicoutimi",
+				"description" : "Dans le cadre de la phase 3 du projet Vision centre-ville 2024-2040, des travaux de réfection  des infrastructures d'égout et d'eau potable auront lieu du mardi 19 mai à 7 h au vendredi 14 août à 12 h. Ces travaux entraîneront : - 19 au 21 mai : fermeture de la rue La Fontaine  entre les rues Racine Est et Jacques-Cartier Est;- 22 au 26 mai : réouverture de la rue La Fontaine;- 27 mai au 14 août : fermetue de la rue La Fontaine  entre les rues Racine Est et Jacques-Cartier Est.",
+				"date_debut" : "2026-05-19T07:00:00",
+				"date_fin" : "2026-08-14T12:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0566404109, 48.4268150734 ],
+					[ -71.0559003233, 48.4266679696 ],
+					[ -71.0553308537, 48.4264998745 ]
+				]
+			},
+			"properties" : {
+				"id" : 2779919,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Lévis",
+				"arrondissement" : "Chicoutimi",
+				"description" : "Des travaux de finalisation de la réparation du mur de soutènement situé au 417, rue Lévis entraîneront un rétrécissement de la chaussée du lundi 20 juillet à 7 h au vendredi 14 août à 17 h.",
+				"date_debut" : "2026-07-20T07:00:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0491292076, 48.4401732636 ],
+					[ -71.0490757444, 48.4402536151 ],
+					[ -71.0489286211, 48.4403955744 ],
+					[ -71.0488195596, 48.4405198076 ],
+					[ -71.0487471671, 48.4406170678 ],
+					[ -71.0486716976, 48.4407494545 ],
+					[ -71.0483253803, 48.4414422704 ],
+					[ -71.0482720226, 48.441505406 ],
+					[ -71.0481821156, 48.441567729 ],
+					[ -71.0480532185, 48.4416206044 ],
+					[ -71.0479515319, 48.4416380519 ],
+					[ -71.0478646912, 48.4416441656 ],
+					[ -71.0477753062, 48.4416413336 ],
+					[ -71.0476712471, 48.4416228168 ],
+					[ -71.0472647839, 48.4415435352 ]
+				]
+			},
+			"properties" : {
+				"id" : 2780050,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue du Beaujolais",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de réfection des égouts, il y aura fermeture de la rue du Beaujolais entre les rues de Beauvoir et Saint-Émile du lundi 27 juillet 2026 au vendredi 2 octobre 2026.Seule une circulation locale sera permise.",
+				"date_debut" : "2026-07-27T07:00:00",
+				"date_fin" : "2026-10-02T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0494957176, 48.4427782051 ],
+					[ -71.0496438897, 48.4429701365 ],
+					[ -71.0497575527, 48.4430673216 ],
+					[ -71.0499300199, 48.4431691128 ],
+					[ -71.0501373825, 48.4432557181 ],
+					[ -71.0503085176, 48.4433067709 ],
+					[ -71.0505003496, 48.4433451187 ],
+					[ -71.0509521132, 48.4434233967 ]
+				]
+			},
+			"properties" : {
+				"id" : 2780160,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Monseigneur-Laval",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de réfection des égouts, il y aura fermeture de la rue Monseigneur-laval entre le boulevard de Tadoussac et  la rue de Sainte-Foy du lundi 27 juillet 2026 au vendredi 2 octobre 2026.Seule une circulation locale sera permise.",
+				"date_debut" : "2026-07-27T07:00:00",
+				"date_fin" : "2026-10-02T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "MultiLineString",
+				"coordinates" : [
+					[
+						[ -71.0226111255, 48.4277442282 ],
+						[ -71.0232804094, 48.4269652161 ]
+					],
+					[
+						[ -71.0232804094, 48.4269652161 ],
+						[ -71.0234460342, 48.4267655888 ],
+						[ -71.0234971901, 48.4266932757 ],
+						[ -71.0235268627, 48.4266112713 ],
+						[ -71.0235416592, 48.4265252866 ],
+						[ -71.023571286, 48.4259822076 ]
+					]
+				]
+			},
+			"properties" : {
+				"id" : 2780222,
+				"municipalite" : "94068",
+				"etat" : "Fermeture complète",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue de Paris",
+				"arrondissement" : "Chicoutimi",
+				"description" : "Des travaux  de réfection d'égout, d'eau potable et de la chaussée  auront lieu du mardi 19 mai à 7 h au vendredi 21 août. Il y aura fermeture : - du boulevard du Saguenay Est, entre les rues de Normandie et de Paris;- de la rue de Paris, entre le boulevard du Saguenay Est et la rue de la Terrasse.Des détours seront possibles dans le secteur. Prévoir vos déplacements en conséquence.",
+				"date_debut" : "2026-05-19T07:00:00",
+				"date_fin" : "2026-08-21T12:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -70.8750457801, 48.3269158839 ],
+					[ -70.8737108843, 48.3262691496 ]
+				]
+			},
+			"properties" : {
+				"id" : 2780882,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard de la Grande-Baie Sud",
+				"arrondissement" : "La Baie",
+				"description" : "En raison de travaux d'aqueduc, il y aura une déviation de voie Nord et Sud sur le Boulevard de la Grande-Baie Sud, ce mercredi 12 août de 7 h à 17 h.",
+				"date_debut" : "2026-08-12T07:00:00",
+				"date_fin" : "2026-08-12T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.2389025843, 48.4427528088 ],
+					[ -71.2390412934, 48.4421440019 ],
+					[ -71.2390672103, 48.4420295511 ],
+					[ -71.2392779911, 48.4411093777 ]
+				]
+			},
+			"properties" : {
+				"id" : 3983081,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Price",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux réalisés par le ministère des Transports et de la Mobilité durable sur le pont de Kénogami, la circulation se fera en alternance du lundi au vendredi à partir du 3 août 2026 à 8 h 30, jusqu'au vendredi 28 août 15 h 30. Des ralentissements sont à prévoir. Il est recommandé de planifier vos déplacements en conséquence.",
+				"date_debut" : "2026-08-03T08:30:00",
+				"date_fin" : "2026-08-28T15:30:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.1180753678, 48.4109622294 ],
+					[ -71.1176140379, 48.4109963157 ],
+					[ -71.1172252189, 48.4110109737 ],
+					[ -71.1168352301, 48.4110140499 ],
+					[ -71.1162138536, 48.4110160609 ],
+					[ -71.1157100681, 48.4110373284 ],
+					[ -71.1152174466, 48.4111106968 ],
+					[ -71.1147663885, 48.4112308271 ],
+					[ -71.1143461539, 48.4113931082 ],
+					[ -71.113615049, 48.4116998511 ]
+				]
+			},
+			"properties" : {
+				"id" : 5748803,
+				"municipalite" : "94068",
+				"etat" : "Circulation en alternance avec feu ou signaleur",
+				"type" : "Travaux prévus",
+				"localisation" : "Chemin de la Réserve",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de réfection de trottoir, il y aura circulation en alternance avec feux sur le chemin de la Réserve à la hauteur du 1656, du mercredi 12 août au vendredi 14 août de 7 h 30 à 17 h.",
+				"date_debut" : "2026-08-12T07:30:00",
+				"date_fin" : "2026-08-14T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.259405354, 48.4093976469 ],
+					[ -71.2592121997, 48.4096901138 ]
+				]
+			},
+			"properties" : {
+				"id" : 5748996,
+				"municipalite" : "94068",
+				"etat" : "Circulation locale",
+				"type" : "Travaux prévus",
+				"localisation" : "Rue Vaillancourt",
+				"arrondissement" : "Jonquière",
+				"description" : "À compter du 8 juin 2026 et pour une période d'environ 13 mois, en raison des travaux de revitalisation du Parc de la Rivière-aux-Sables, la rue Vaillancourt sera réservée à la circulation locale seulement.Les usagers sont invités à suivre la signalisation temporaire qui sera installée sur place.",
+				"date_debut" : "2026-06-08T07:00:00",
+				"date_fin" : "2027-07-09T00:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.1813971672, 48.417729632 ],
+					[ -71.1812732188, 48.4179179375 ],
+					[ -71.1811204364, 48.4180913649 ],
+					[ -71.1804505314, 48.4187786106 ],
+					[ -71.1803422978, 48.4189086019 ],
+					[ -71.1802717141, 48.4190123142 ],
+					[ -71.1802325019, 48.4190884339 ],
+					[ -71.1801985455, 48.4191751748 ],
+					[ -71.1801662417, 48.419282404 ],
+					[ -71.1801484624, 48.4194259601 ],
+					[ -71.1800522708, 48.4200829837 ]
+				]
+			},
+			"properties" : {
+				"id" : 5749089,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard Mellon",
+				"arrondissement" : "Jonquière",
+				"description" : "En raison de travaux de réfection du trottoir qui auront lieu face au 2133, boulevard Mellon, celui-ci sera fermé en direction nord, entre les rues Vaudreuil et Saint-Denis, du mardi 11 août à 7 h au jeudi 13 août à 17 h.Un détour sera mis en place par la rue de Calais.Nous vous remercions de votre collaboration et vous invitons à prévoir vos déplacements en conséquence.",
+				"date_debut" : "2026-08-11T07:00:00",
+				"date_fin" : "2026-08-13T17:00:00"
+			}
+		},
+		{
+			"type" : "Feature",
+			"geometry" : {
+				"type" : "LineString",
+				"coordinates" : [
+					[ -71.0777552734, 48.3874990064 ],
+					[ -71.078506458, 48.3868629736 ],
+					[ -71.0786845967, 48.3867228732 ]
+				]
+			},
+			"properties" : {
+				"id" : 5749194,
+				"municipalite" : "94068",
+				"etat" : "Restriction de voies",
+				"type" : "Travaux prévus",
+				"localisation" : "Boulevard Talbot",
+				"arrondissement" : "Chicoutimi",
+				"description" : "En raison de travaux de réparation d'une fuite, il y aura fermeture de 2 voies sur 4 en direction sud sur le boulevard Talbot en face du 2276 du mardi 11 août à 5 h au mercredi 12 août à 20 h.",
+				"date_debut" : "2026-08-11T05:00:00",
+				"date_fin" : "2026-08-12T20:00:00"
+			}
+		}
+	]
+}
