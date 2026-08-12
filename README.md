@@ -155,7 +155,6 @@ We used AgentMail (`*.agentmail.to`) while building. That is a default, not a ha
 - **Role separation** — separate bots + `people.role` so field users are not treated as superintendent.
 - **Project isolation** — each site has its own `kb/projects/{id}/`.
 - **`protect-identity` plugin** ([deploy/hermes/plugins/protect-identity](deploy/hermes/plugins/protect-identity)) — blocks the agent from rewriting `SOUL.md`, `config.yaml`, or `.env` under Hermes home. Personality and secrets stay operator-owned.
-- **Honesty rules in skills / SOUL** — don’t log notify success without delivery proof; don’t invent site facts; don’t discuss sim on live channels.
 
 ---
 
