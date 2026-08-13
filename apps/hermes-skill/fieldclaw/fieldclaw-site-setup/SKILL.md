@@ -1,7 +1,7 @@
 ---
 name: fieldclaw-site-setup
-description: Set up / map a FieldClaw site — wiki folders (via /init or scaffold), GeoJSON or PDF/image site plans (Datalab/Chandra OCR), zones API, generative map widgets. Companion to /init and the fieldclaw umbrella skill.
-version: 0.3.0
+description: Set up / map a FieldClaw site — wiki folders (via /init or scaffold), GeoJSON or PDF/image site plans (Datalab/Chandra OCR), zones API, generative map widgets. Also authoritative project enumeration/resolution. Companion to /init and the fieldclaw umbrella skill.
+version: 0.3.1
 ---
 
 # FieldClaw Site Setup & Zone Mapping
@@ -9,7 +9,7 @@ version: 0.3.0
 Stand up or repair a site map. For **full from-scratch** bootstrap (folders +
 mail + people + map), prefer the Supervisor slash command **`/init`**
 (`init` skill). This skill is the map/zones deep-dive used by `/init` step 4
-and by “import the logistics map” asks.
+and by "import the logistics map" asks.
 
 ## Ownership of wiki folders
 
@@ -29,6 +29,24 @@ Suggested folders: `ops`, `zones`, `people`, `sources`, `maps`, `pos`, `rfis`,
 Wiki pages under `zones/` do **NOT** guarantee `GET .../zones` is populated.
 **Never report "zones live" off the wiki index.** Always verify
 `GET {BASE}/api/projects/{id}/zones` (label + polygon).
+
+## Authoritative project enumeration & resolution
+
+Asked "which project / what projects are available", resolve from the DB + API,
+**not** memory, other agents' logs, or wiki stubs:
+
+- **Sources of truth, in order:** backing SQLite `data/fieldclaw.db`
+  (`SELECT id,name,inbox_email FROM projects`) and the public
+  `GET {BASE}/api/projects` (the list endpoint needs **no** auth, but
+  `GET /api/projects/{id}` and all per-project routes need a valid `X-API-Key`).
+- Memory and cron log references routinely carry **stale project names**
+  (e.g. "Human_DC1", "My Site") that no longer exist after a reset/re-seed.
+  When memory/logs disagree with DB+API, report the DB+API truth and flag the
+  stale reference rather than silently trusting the old name.
+- Wiki index files under `kb/projects/{id}/wiki/index.md` are **not** evidence
+  of registration — `/init` scaffolds these stub indexes; only a row in the
+  `projects` table makes a project live. Earlier sites that are no longer in the
+  DB must be explicitly re-registered before you operate on them.
 
 ## Map inputs (pick one)
 
@@ -75,6 +93,7 @@ Dashboard polls `GET .../ui/widgets` and renders chips/callouts above the zone m
 - **Location-map PDFs** (roads only) OCR poorly for process zones — prefer real GeoJSON or a true plot plan.
 - **Secrets in shell:** use Python `os.environ` scripts, never inline `$FIELDCLAW_API_KEY`.
 - **`execute_code` blocked under cron** — write `.py` + `terminal`.
+- **Editing fieldclaw SKILL.md from the `default` profile:** `skill_manage` patch/edit/write_file fail with "Skill not found in active profile"; only `action='create'` resolves on this store. To update an existing fieldclaw skill, recreate it via `skill_manage action='create'` with the full updated SKILL.md, or edit the file on disk at `~/.hermes-fieldclaw/skills/fieldclaw/<name>/SKILL.md`.
 
 ## Verification
 

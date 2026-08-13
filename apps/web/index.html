@@ -324,10 +324,11 @@
       <div class="row">
         <input id="adminInbox" placeholder="Existing inbox email (optional)" style="flex:1" />
       </div>
-      <div class="hint" id="onboardHint">1. Create / pick a project (optional: reuse an AgentMail inbox)
-2. Save your admin profile
-3. Pairing is optional if already bound in DB — otherwise paste Telegram code
-4. Import GeoJSON / site-plan PDF so zones appear on the map</div>
+      <div class="hint" id="onboardHint">1. Create / pick a project — for the Wilbarger demo, use inbox <code>kaya-meow@agentmail.to</code>
+2. Save your admin profile (your name + project name)
+3. DM <code>@kayaadmin_bot</code> on Telegram, paste the pairing code, Approve + bind
+4. In Telegram send <code>/init</code> so the agent scaffolds the wiki, pulls mail, and maps zones
+5. Foremen later pair via <code>@kaya_foremenbot</code> on the Crew tab (separate bot)</div>
       <div class="row">
         <button id="btnOnboardCreate">Create project + save admin</button>
         <button class="secondary" id="btnOnboardSkip">I already have a project</button>
@@ -568,6 +569,12 @@
       document.querySelectorAll(".cam-now").forEach((el) => { el.textContent = now; });
     }
 
+    // Same-origin <img>/<video> send the session cookie; no api_key query needed.
+    function camUrl(path, bust = false) {
+      if (!bust) return path;
+      return `${path}${path.includes("?") ? "&" : "?"}t=${Date.now()}`;
+    }
+
     async function startCamWall() {
       if (!isWastewaterProject()) { syncCamTab(); return; }
       stopCamWall();
@@ -588,8 +595,8 @@
         for (const cam of cams) {
           const tile = document.createElement("div");
           tile.className = "cam-tile";
-          const still = camAuthUrl(cam.still_url) + `&t=${Date.now()}`;
-          const video = camAuthUrl(cam.video_url);
+          const still = camUrl(cam.still_url, true);
+          const video = camUrl(cam.video_url);
           tile.innerHTML = `
             <div class="cam-chrome">
               <span>${escapeHtml(cam.label || cam.name || "CAM")}</span>
@@ -1185,7 +1192,7 @@
     const PROMPTS = {
       create_project: "No project yet. Name the site and create it — an AgentMail inbox is provisioned unless you paste an existing one.",
       register_admin: "Project exists but has no superintendent. Save your admin profile to claim it.",
-      pair_telegram: "Admin registered but not bound to Telegram. DM the bot, then paste the pairing code below.",
+      pair_telegram: "Admin registered but not bound to Telegram. DM @kayaadmin_bot, then paste the pairing code below.",
       ready: "Setup complete. Everything below is live.",
     };
 

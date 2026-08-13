@@ -1,7 +1,7 @@
 ---
 name: agentmail-rest-polling
 description: Poll AgentMail REST API for inbound email when MCP is unreachable — response shapes, field-name pitfalls, GET-only limitation, security-filter workarounds, and the full poll→parse→FieldClaw-event pipeline.
-version: 0.3.1
+version: 0.4.0
 ---
 
 # AgentMail REST API Polling (FieldClaw cron fallback)
@@ -189,6 +189,32 @@ back before running.
    not proof of a new thread. If the map/zones already exist, the thread was already processed;
    stay `[SILENT]` rather than re-log duplicate events.
 
+### Subject-set dedup verification — conclusive "[SILENT]" on a noisy inbox
+
+When you need to PROVE nothing is new (rather than trust an idempotent re-run), compare the
+**union of inbox thread subjects** against the **union of `email.inbound` event
+`payload.subject` values**:
+
+```python
+inbox_subs = {t['subject'].strip() for t in json.load(open('/tmp/threads.json'))['threads']}
+ev = json.load(open('/tmp/events.json'))        # full GET .../events dump (not just type filter)
+logged = {e['payload'].get('subject','').strip() for e in ev if e['type']=='email.inbound'}
+print('missing:', sorted(inbox_subs - logged))  # empty → nothing new → [SILENT]
+```
+
+Why a subject-set (not a count or thread_id scan) is the right shape (observed 2026-08-13,
+fc_demo1: 22 threads / 14 unique subjects, all already `email.inbound` + `email.parsed`):
+- **Duplicate threads** (sender AND recipient copies of the same email) inflate the thread
+  count — a raw count<=>count or thread-count-vs-event-count comparison false-positives as
+  "new". Sets collapse the sender/recipient twins to one subject.
+- **`thread_id` may not be present in the event payloads** (only `subject` is stored), so an
+  id-based dedup scan finds no handle to match. `payload.subject` is the stable cross-reference
+  that exists on both sides.
+- A set-difference of `0 missing` is the honest basis for `[SILENT]`. Never claim the
+  wiki/logbook was updated on that basis — nothing was written this run.
+- For a rigorous check, pull the FULL `/events` dump (not `?type=email.inbound`, which the
+  API may return incomplete) so the `email.inbound` set reflects everything logged.
+
 ### Parsing regexes
 
 ```python
@@ -226,7 +252,8 @@ QUALITY_RE = re.compile(r'\b(?:quality|defect|rework|reject|nonconform|NC|punch\
 ## Silent exit
 
 When no new inbound messages are found (all threads already processed, or all
-messages are outbound): respond with exactly `[SILENT]`.
+messages are outbound): respond with exactly `[SILENT]`. Use the subject-set dedup
+verification above to prove it on a noisy/inbox-duplicated store.
 
 ## Pitfalls
 
@@ -245,6 +272,7 @@ messages are outbound): respond with exactly `[SILENT]`.
 | Event POST uses `metadata` instead of `payload` | Always use `payload` field — `metadata` creates empty events |
 | Delay regex matches "late" inside "templates" | Use `\b` word boundaries in all delay regexes |
 | **Cannot send email via REST API with API key** | POST returns 404. Use MCP or OAuth. Under cron with MCP down: log `notify.failed` |
+| **Duplicate threads (sender+recipient) make a count-based "all processed?" check false-positive as NEW** | Compare the SET of inbox thread subjects vs the SET of logged `email.inbound` `payload.subject` values; a `0 missing` set-diff is the proof of nothing-new → `[SILENT]` (2026-08-13 fc_demo1). |
 
 ## See also
 
@@ -252,3 +280,4 @@ messages are outbound): respond with exactly `[SILENT]`.
 - `cron-api-polling` — cron tool restrictions, security scanner workarounds
 - `supplier-delay-polling` — supplier-delay-specific detection and notification flow
 - `fieldclaw-geojson-sitemap-import` — importing an inbound *.geojson zone map via `mail/pull-attachments`
+- `fieldclaw-cron-curl-safety` — why inline auth headers get mangled under cron (this skill's sibling HTTP hygiene doc)

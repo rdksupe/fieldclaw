@@ -41,9 +41,11 @@ def list_pairing(platform: str | None = "telegram") -> dict:
     return {
         "pending": store.list_pending(platform),
         "approved": store.list_approved(platform),
-        "bot_username": settings.telegram_bot_username,
+        "bot_username": settings.telegram_foreman_bot_username,
+        "admin_bot_username": settings.telegram_bot_username,
         "instructions": (
-            f"1. Foreman opens Telegram and DMs @{settings.telegram_bot_username}\n"
+            f"1. Foreman opens Telegram and DMs @{settings.telegram_foreman_bot_username}\n"
+            "   (not @{settings.telegram_bot_username} — that is the superintendent bot)\n"
             "2. Bot replies with an 8-character pairing code\n"
             "3. Paste that code below and Approve → bind as foreman"
         ),

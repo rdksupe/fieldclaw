@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     telegram_foreman_chat_id: str | None = None
     telegram_super_chat_id: str | None = None
     telegram_bot_username: str = "kayaadmin_bot"
+    telegram_foreman_bot_username: str = "kaya_foremenbot"
 
     agentmail_api_key: str | None = None
     hermes_home: Path = Path.home() / ".hermes-fieldclaw"

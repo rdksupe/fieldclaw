@@ -1,7 +1,7 @@
 ---
 name: supplier-delay-polling
 description: Cron job workflow for detecting supplier-delay signals in FieldClaw — multi-project polling, email.inbound parsing, schedule.flagged projection, task at-risk flagging, and notify.sent/notify.failed logging.
-version: 0.2.4
+version: 0.2.5
 ---
 
 # Supplier Delay Polling (FieldClaw cron)
@@ -298,6 +298,12 @@ ALWAYS also check `notify.sent`/`notify.failed` whose top-level `(po_id, task_id
 matches the candidate — id-linkage dedup alone produces false positives that force manual
 reconciliation via a full event dump (sort by `created_at`, print the payloads).
 
+**⚠️ New 2026-08-13: there is NO per-event detail endpoint** (`GET .../events/{event_id}`
+returns 404), so the "fetch the full event detail" step means re-fetching `events?limit=100`
+and filtering the list for the candidate id — the list row already carries the complete
+`payload`, top-level `zone_id`/`po_id`/`task_id`, and `created_at`. Never depend on an
+individual-detail call.
+
 ### 6. Act on new signals
 
 For each unnotified supplier-delay signal:
@@ -471,6 +477,7 @@ that trigger with `delivered`/`channel` — this also surfaces supersession
 | **`events?limit=100` on a noisy project may still truncate** (DC Campus had 125 events) | `limit=100` returns only the first 100; an ad-hoc scan can miss older events (including earlier `notify.sent` records that dedup a candidate). If a project has >100 events and you see an unexpected "new" flag, re-fetch with a larger limit (200/500) for the notify history before escalating |
 | **`schedule.flagged` dedup STILL false even after source_event_id + super_queue_id checks** | Match the flagged event's OWN top-level `(po_id, task_id, zone_id)` tuple against `notified_tuples`. A `notify.sent` for the same PO/task/zone (top-level fields on both events) covers it even when no id linkage exists (2026-08-12, DC Campus). See `references/dedup-tuple-check.md` |
 | **Event deletion unsupported**: `DELETE /api/projects/{pid}/events/{id}` returns 404 | Cannot remove bad `notify.sent` entries. Prevention (skip empty payloads) is the only fix |
+| **Per-event detail GET `.../events/{event_id}` returns 404** (observed 2026-08-13 fc_demo1) | There is NO per-event detail endpoint. The "fetch full event detail" guidance means re-fetching `GET .../events?limit=100` and filtering the returned list for the candidate id — the list row carries the complete `payload`, top-level `zone_id`/`po_id`/`task_id`, and `created_at`. Never depend on an individual-detail call to inspect a candidate (verified: `events/{event_id}` → 404). See `references/no-per-event-detail-endpoint.md` |
 | **Super-queue dedup by id-only → false "NEW" flags on delivered items** (observed 2026-08-12) | A `/super-queue` `schedule.flagged` is a *projection* of an already-delivered origin; it matches `notify.sent` by the **top-level `(po_id, task_id, zone_id)` tuple**, not by its own id or `source_event_id`. If the queue-reconciliation loop calls `handled()` with `None` for po/task/zone while the events loop uses the full tuple, the same already-delivered item prints `handled=***NEW***` in the queue branch — forcing manual reinterpretation and risking a false re-escalation. Fix: thread the queue item's top-level `po_id/task_id/zone_id` (`q.get(...)`, not payload) into the SAME shared `handled()` check used for events so both loops agree. |
 | **`email.parsed` events use `body_preview`** not `body` | Check both: `p.get("body", "") or p.get("body_preview", "")` |
 | **`status.reported` events are shortage signals too** | Scan super-queue for `status.reported` with shortage keywords ("waiting on", "need", "short", "out of"), not just `email.inbound`/`schedule.flagged` |
@@ -482,7 +489,7 @@ that trigger with `delivered`/`channel` — this also surfaces supersession
 | **Resolve returns an empty projects list — do NOT assume the system is genuinely empty** (observed 2026-08-12) | `GET /api/projects` returning `200 []` (and `FIELDCLAW_PROJECT_ID` unset) is a valid reason to `[SILENT]` ONLY after confirming it is real. Verify against the system of record before concluding "no project to poll": the resolver (`resolve_project.py`) + `data/fieldclaw.db` SQLite rowcounts (`SELECT count(*) FROM projects/people/events/mail_messages`) both returning 0 proves an empty env. If the API returns `[]` but tenant project dirs exist under `kb/tenants/*/projects/`, the API and KB are out of sync — re-check the DB / that the server is pointing at the right `fieldclaw.db` rather than trusting the empty API alone. On a genuinely empty env the correct output is `[SILENT]` (no project id, no signals), not a `notify.failed`. |
 | **Cross-job collision on shared `/tmp` script names** (observed 2026-08-12) | `watch-supplier-delays`, `mail-poll`, and `watch-shortages` all write cursor/Poll logic to sharded paths (`/tmp/fc_supplier_poll.py`, `/tmp/poll_mail.py`). A `write_file` to `/tmp/fc_supplier_poll.py` came back "modified by sibling subagent" — a concurrent FieldClaw job was using the same path. If the write/run ordering flips, you could silently run a sibling job's script against your project. Fix: give the temp script a unique per-run suffix (e.g. `/tmp/fc_supplier_poll_<job>_<ts>.py`) and always run the file you just wrote, or check the "modified by sibling" warning and re-write before running. |
 | **Sibling cron jobs collide on shared `/tmp` script names** (observed 2026-08-12) | Several FieldClaw jobs (watch-shortages, watch-supplier-delays, mail-poll) run every 3–5m and each writes `/tmp/{fc_resolve,fc_poll}.py`. A concurrent sibling overwrote my script between `write_file` and `run`, surfacing a "modified by sibling subagent" warning. Namespace your /tmp scripts per run (e.g. append the project id: `/tmp/fc_cron_81989611.py`) and re-read before running if a warning fires. |
-| **skill_manage patch/write_file cannot reach the fieldclaw store from default profile** | Only `action='create'` resolves `~/.hermes-fieldclaw/skills/`. To update an existing fieldclaw skill, recreate it with `create` + full updated content, or edit the file on disk with file/write tools in a full session. |
+| **skill_manage patch/write_file cannot reach the fieldclaw store from default profile** | Only `action='create'` resolves `~/.hermes-fieldclaw/skills/`. To patch an existing fieldclaw skill, recreate it with `create` + full updated content, or edit the file on disk with file/write tools in a full session. |
 
 ## HTTP-only (browser_console) multi-project poll
 

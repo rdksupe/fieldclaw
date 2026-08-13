@@ -241,33 +241,59 @@ deploy/hermes/provision_role.sh foreman "<FOREMAN_TELEGRAM_BOT_TOKEN>"
 API only: `cd apps/api && uv run uvicorn fieldclaw_api.main:app --host 127.0.0.1 --port 8000`  
 Gateway only: `hermes-fieldclaw gateway run --replace`
 
-### 6. First project on the UI
+### 6. First project on the UI (Wilbarger / wastewater demo)
 
-1. Open the UI. If you wiped the DB before, click **Reset cache** so old localStorage project ids are gone.
-2. Enter your name and project name.
-3. Optional: paste an existing project inbox email. Leave blank to provision a new one.
-4. Create the project.
-5. DM the Supervisor bot on Telegram, get a pairing code, approve it in onboard or the Crew tab (`bind_role` = superintendent).
+Open the UI (local `http://127.0.0.1:8000/` or the OCI API host on port `8000`). Sign in with the site password printed at API startup (`data/ui_password.txt` on the API host).
 
-### 7. Bootstrap the site
+You should see the **Register as site admin** modal:
 
-In Telegram to Supervisor, run `/init`. That scaffolds wiki folders, pulls mail attachments if any, tries to import a site map, and reports what is ready.
+<p align="center">
+  <img src="docs/screenshots/ui-onboard-modal.png" alt="FieldClaw register-as-site-admin modal" width="720" />
+</p>
 
-Confirm:
+Fill it like this for the seeded Wilbarger Creek RWWTF demo:
 
-- Ops map has zones only after `GET .../zones` is populated (wiki pages alone are not enough)
-- Wiki → Pages / Maps / PDFs & photos show what was ingested
-- Crew tab shows the superintendent bound
+| Field | What to put |
+| --- | --- |
+| Your name | Your name (becomes the superintendent) |
+| Email | Optional |
+| Project name | e.g. `Wilbarger RWWTF` |
+| Existing inbox email | **`kaya-meow@agentmail.to`** (the wastewater / AgentMail demo inbox already seeded with bid docs + mail) |
 
-### 8. Add a foreman
+Then:
 
-DM the **foreman** bot (different token). Approve pairing with `bind_role` = foreman on the same project. Field reports and photos then go through that profile.
+1. Click **Create project + save admin**.
+2. On Telegram, DM **`@kayaadmin_bot`** (superintendent / Supervisor Claw). The bot replies with an 8-character pairing code.
+3. Paste that code in the modal → **Approve + bind me** → **Continue to dashboard**.
+4. Still in Telegram with `@kayaadmin_bot`, send **`/init`**. That scaffolds `wiki/` folders, pulls mail attachments from the inbox, tries to import a site map, and reports what is ready.
 
-### 9. Day-to-day
+Confirm after `/init`:
 
-- Foreman: status / shortage / safety / quality on Telegram (+ photo upload via Hermes proofs)
-- Superintendent: dashboard + Telegram; answer items on the super-queue
-- Mail: cron or manual `POST .../mail/pull-attachments`
-- Maps: GeoJSON upload, sitemap-named PDF/PNG, or ask for area names and create zones
+- Ops map has zones (wiki pages alone are not enough — zones come from GeoJSON / sitemap import)
+- Wiki → Pages / Maps / PDFs & photos show ingested docs
+- Crew tab shows the superintendent bound to your Telegram id
 
-If something looks empty after a wipe, use **Reset cache**, re-select the project, and re-run `/init` if the wiki folders are missing.
+### 7. Add a foreman (separate bot)
+
+Superintendent and foreman are **two Hermes profiles / two Telegram bots**, multiplexed under one gateway:
+
+| Role | Telegram bot | Hermes home |
+| --- | --- | --- |
+| Superintendent | `@kayaadmin_bot` | `~/.hermes-fieldclaw` |
+| Foreman | `@kaya_foremenbot` | `~/.hermes-fc-foreman` (linked as `profiles/foreman`) |
+
+On the **Crew · Pairing** tab:
+
+1. Have the foreman DM **`@kaya_foremenbot`** (not `@kayaadmin_bot`).
+2. Paste the pairing code → **Approve + bind foreman** on the same project.
+
+Field reports and photos then go through the foreman profile. Do **not** run a second standalone gateway on the foreman home while multiplexing is enabled — `hermes-fieldclaw gateway run` owns both.
+
+### 8. Day-to-day
+
+- Foreman (`@kaya_foremenbot`): status / shortage / safety / quality on Telegram (+ photo upload via Hermes proofs)
+- Superintendent (`@kayaadmin_bot`): dashboard + Telegram; answer items on the super-queue; `/init` for bootstrap
+- Mail: cron or manual `POST .../mail/pull-attachments` against the project inbox (`kaya-meow@agentmail.to` for the demo)
+- Maps: GeoJSON upload, sitemap-named PDF/PNG, or ask Supervisor Claw to map areas during setup
+
+If something looks empty after a wipe, sign out / sign in again, re-select the project, and re-run `/init` if the wiki folders are missing.

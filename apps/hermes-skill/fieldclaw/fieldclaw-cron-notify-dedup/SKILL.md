@@ -1,7 +1,7 @@
 ---
 name: fieldclaw-cron-notify-dedup
-description: Decide whether a FieldClaw queue/event item has ALREADY been notified before escalating, by reading the LATEST delivery record per trigger. Covers the notify.failed → notify.sent supersession lifecycle (an older dead-end can later be succeeded on the same source_event_id), the top-level (po_id, task_id, zone_id) tuple dedup that ID-only scans miss, the super_queue_id → schedule.flagged-id second handle, tuple-match verification, and confirming project-match before deduping against prior-run history.
-version: 0.1.7
+description: Decide whether a FieldClaw queue/event item has ALREADY been notified before escalating, by reading the LATEST delivery record per trigger. Covers the notify.failed → notify.sent supersession lifecycle (an older dead-end can later be succeeded on the same source_event_id), the top-level (po_id, task_id, zone_id) tuple dedup that ID-only scans miss, the super_queue_id → schedule.flagged-id second handle, tuple-match verification, confirming project-match before deduping against prior-run history, and identical-signal duplicate events. 
+version: 0.1.8
 ---
 
 # FieldClaw Cron Notify Dedup (lifecycle-aware)
@@ -132,6 +132,25 @@ notify history (see the `super_queue_id` and tuple handles above). The shortage
 channel (supplier-delay) writes `schedule.flagged`, not necessarily a dedicated
 `shortage.raised` event.
 
+## Dedup identical-signal DUPLICATE events by payload content, not just trigger id (observed 2026-08-13, fc_demo1)
+
+Shortage/delay signals are frequently **duplicated at creation** — the same material/zone
+is written twice under different event ids (an older twin + a newer twin) carrying the
+SAME `payload.summary`. Real case (fc_demo1): `shortage.raised` `2982e0b2` (4in DI
+fittings) had a `notify.sent 1564d323` `delivered:true`, while an older identical twin
+`ae551b5d` (same "Short 3 crates of 4in DI fittings" summary) sat with NO notify record
+of its own. Likewise the blower ETA slip existed as `schedule.flagged 95f4d805`
+(notified, `delivered:true`) and twin `059c0912` (identical "Blower equipment ETA slipped
+5 days" summary, unnotified by id).
+
+A trigger-id-only scan flags these older twins as NEW — false escalation. Fix: after the
+id/tuple/super_queue_id pass, **group candidates by normalized signal content**
+(`payload.summary` + `zone_id` / `zone_label`). If ANY member of the group already has a
+`notify.sent` with `delivered:true`, the whole group is handled → `[SILENT]`; do not
+escalate the twin. Re-sending the same physical signal twice (once per duplicate id) is
+notification spam. Confirm the twins truly share a payload before coalescing (do not
+merge distinct signals that merely mention the same zone).
+
 ## Difference between "delivered flag" and "already escalated"
 
 `payload.delivered` (and `message_id`/`mirrored`) tells you whether YOUR send
@@ -145,7 +164,8 @@ still proves the trigger was escalated → treat the item as handled and stay
 Dedup must come from the actual API, not a prior run's narrative (other FieldClaw
 jobs — `cron-supplier-delay`, mail-poll — mutate events between runs):
 
-- `GET /api/projects/{pid}/events?limit=100` (NOT 500 — see the timeout pitfall),
+- `GET /api/projects/{pid}/events?limit=100` (NOT 500 — see the timeout pitfall, and
+  NEVER build an offset/limit pagination loop — see the hang pitfall below),
   filter `notify.sent` / `notify.failed`, group by `payload.trigger_event_id` AND
   `payload.super_queue_id` (both handles, see above).
 - Confirm the current env `FIELDCLAW_PROJECT_ID` still points at the project whose
@@ -183,8 +203,10 @@ state change, stay `[SILENT]`. Match the JOB ID (several fieldclaw jobs run ever
 | Treating absence of `payload.delivered` as "not escalated" | Dedup on any existing notify record regardless of the delivered flag; `delivered` only governs whether YOU log `delivered:true`. |
 | Deduping against a prior run's *description* of notify state | Re-fetch `events?limit=100` fresh; derive dedup from the response, not claims. |
 | Confusing this job's history with a sibling job's | Use `<job_id>/` matching THIS job (see above). |
-| Project shifted between runs → prior-run dedup silently misfires | Confirm current env project id first; only dedup against prior runs on the SAME project id. |
+| Project shifted between runs → prior-run dedup silently misfires | Confirm current env project id first; only dedup against prior run(s) on the SAME project id. |
 | `events?limit=500` times out on noisy projects | Use `limit=100` or omit the param. |
+| An **offset/limit pagination loop** over events hangs to the terminal timeout (180s), freezing the whole cron | Do NOT build `while True: fetch(limit=100, offset+=len(batch))`. The FieldClaw events endpoint (uvicorn) does not page reliably via `offset` — the loop re-fetches the same window forever and never terminates. Fetch **one** bounded `events?limit=100` and close the poll in single requests per resource; the newest `notify.sent`/`notify.failed`/`schedule.flagged`/`shortage.*` records for dedup all sit in that one window (observed 2026-08-13 fc_demo1). |
+| An identical-signal event under a DIFFERENT id than the delivered one looks "unnotified" | Signals are often duplicated at creation (older + newer ids, same `payload.summary`). Group candidates by normalized signal content (summary+zone); if one twin has `delivered:true`, the whole group is handled → `[SILENT]`. Re-escalating the older twin is spam (observed 2026-08-13 fc_demo1). |
 | **Verify dump filters only by trigger/super_queue id, so tuple-only candidates show NO proof line** | In the verify pass ALSO match notify records by top-level `(po_id, task_id, zone_id)` = candidate tuple, so tuple-deduped items get a visible delivery record (see section above). |
 | **Tuple/OR-match in the verify pass returns OTHER triggers' notify records; a "match count >= 1" is mistaken for proof** | For each returned record, confirm its OWN `_id`/`trigger_event_id`/`super_queue_id`/top-level tuple equals the candidate's handle before declaring it handled. The tuple filter broad-matches within a project — reason over the printed records, don't trust the count. |
 
@@ -199,7 +221,7 @@ Note: a same-named skill also existing at the ROOT skill dir
 (`~/.hermes-fieldclaw/skills/<name>/`) makes `create` collide — use a name with no
 root-dir duplicate, or edit the file directly.
 
-## See also / overlap
+## See also / overlap note
 
 Overlaps `fieldclaw-cron-escalation` (dedup rules 1–4) and `supplier-delay-polling`
 (§5 tuple dedup, §3a/3b signal detection) — these stores overlap on the tuple dedup
