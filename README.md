@@ -112,7 +112,7 @@ An early mistake was binding one Telegram id onto every new project and sharing 
 
 **STT / TTS** — optional. Voice notes can go through speech-to-text; replies can use TTS. We wired smallest.ai scripts next to the skills; you can point the same hooks at another provider.
 
-**Demo / simulation data** — under `sim/` and `kb/samples/`. For a credible demo we used public Wilbarger Creek RWWTF bid docs (Legistar / Granicus), split large PDFs for mail size limits, built zone GeoJSON from process areas, and seeded mail into a demo inbox. See [kb/samples/wilbarger/SOURCES.md](kb/samples/wilbarger/SOURCES.md) and [kb/samples/sitemaps/wilbarger-rwwtf-zones.geojson](kb/samples/sitemaps/wilbarger-rwwtf-zones.geojson). Eval replay JSONL is for operators only — live Telegram SOUL rules say not to talk about simulation on site channels. Foreman “pulse” seeding stays opt-in.
+**Demo / real-env corpus** — under `sim/` and `kb/samples/`. For a credible demo we used public Texas wastewater-treatment bid docs (Legistar / Granicus), split large PDFs for mail size limits, built zone GeoJSON from process areas, and seeded mail into a demo inbox. Sample paths: [kb/samples/wilbarger/SOURCES.md](kb/samples/wilbarger/SOURCES.md), [kb/samples/sitemaps/wilbarger-rwwtf-zones.geojson](kb/samples/sitemaps/wilbarger-rwwtf-zones.geojson). Eval replay JSONL is for operators only — live Telegram SOUL rules say not to talk about simulation on site channels. Foreman “pulse” seeding stays opt-in.
 
 ---
 
@@ -242,7 +242,7 @@ API only: `cd apps/api && uv run uvicorn fieldclaw_api.main:app --host 127.0.0.1
 Gateway only: `hermes-fieldclaw gateway run --replace`
 
 <a id="demo-access"></a>
-### 6. First project on the UI (Wilbarger / wastewater demo)
+### 6. First project on the UI (Texas wastewater real env)
 
 **Live OCI UI:** [http://129.225.119.60:8000/](http://129.225.119.60:8000/)  
 **Deep link to this section:** [README § demo-access](https://github.com/rdksupe/fieldclaw/blob/main/README.md#demo-access)
@@ -250,7 +250,7 @@ Gateway only: `hermes-fieldclaw gateway run --replace`
 | Demo secret | Value |
 | --- | --- |
 | Site password | **`yard-077c-98ab`** (also in `data/ui_password.txt` on the API host) |
-| Recommended project inbox | **`fc-my-site8506@agentmail.to`** (AgentMail mailbox seeded for the Texas WWTF sim) |
+| Recommended project inbox | **`fc-my-site8506@agentmail.to`** (AgentMail mailbox seeded with real Texas WWTF docs + mail) |
 | Zone map sample (on OCI + in repo) | `kb/samples/sitemaps/wilbarger-rwwtf-zones.geojson` |
 
 Open the UI (local `http://127.0.0.1:8000/` or the OCI link above). Sign in with the site password.
@@ -261,13 +261,13 @@ You should see the **Register as site admin** modal:
   <img src="docs/screenshots/ui-onboard-modal.png" alt="FieldClaw register-as-site-admin modal" width="720" />
 </p>
 
-Fill it like this for the Wilbarger Creek RWWTF (Texas wastewater) demo:
+Fill it like this for the Texas wastewater real-env demo:
 
 | Field | What to put |
 | --- | --- |
 | Your name | Your name (becomes the superintendent) |
 | Email | Optional |
-| Project name | e.g. `Wilbarger RWWTF` |
+| Project name | e.g. `Texas WWTF` |
 | Existing inbox email | **`fc-my-site8506@agentmail.to`** |
 
 Then:
@@ -275,11 +275,11 @@ Then:
 1. Click **Create project + save admin**.
 2. On Telegram, DM **`@kayaadmin_bot`** (superintendent / Supervisor Claw). The bot replies with an 8-character pairing code.
 3. Paste that code in the modal → **Approve + bind me** → **Continue to dashboard**.
-4. Still in Telegram with `@kayaadmin_bot`, send **`/init`**. That scaffolds `wiki/` folders, pulls mail attachments from the inbox, imports the Wilbarger GeoJSON when present, and reports what is ready.
+4. Still in Telegram with `@kayaadmin_bot`, send **`/init`**. That scaffolds `wiki/` folders, pulls mail attachments from the inbox, imports the site GeoJSON when present, and reports what is ready.
 
 Confirm after `/init`:
 
-- Ops map has zones from `wilbarger-rwwtf-zones.geojson` (wiki pages alone are not enough)
+- Ops map has zones from the GeoJSON sample (wiki pages alone are not enough)
 - Wiki → Pages / Maps / PDFs & photos show ingested docs
 - Crew tab shows the superintendent bound to your Telegram id
 
@@ -304,6 +304,6 @@ Field reports and photos then go through the foreman profile. Do **not** run a s
 - Foreman (`@kaya_foremenbot`): status / shortage / safety / quality on Telegram (+ photo upload via Hermes proofs)
 - Superintendent (`@kayaadmin_bot`): dashboard + Telegram; answer items on the super-queue; `/init` for bootstrap
 - Mail: cron or manual `POST .../mail/pull-attachments` against the project inbox (`fc-my-site8506@agentmail.to` for the demo)
-- Maps: GeoJSON upload (`kb/samples/sitemaps/wilbarger-rwwtf-zones.geojson` is already on OCI), sitemap-named PDF/PNG, or ask Supervisor Claw to map areas during setup
+- Maps: GeoJSON upload (Texas WWTF zone sample is already on OCI at `kb/samples/sitemaps/wilbarger-rwwtf-zones.geojson`), sitemap-named PDF/PNG, or ask Supervisor Claw to map areas during setup
 
 If something looks empty after a wipe, sign out / sign in again, re-select the project, and re-run `/init` if the wiki folders are missing.

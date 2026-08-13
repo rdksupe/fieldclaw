@@ -306,7 +306,7 @@
         <input id="loginPassword" type="password" placeholder="Password" style="flex:1" />
         <button id="btnLogin">Sign in</button>
       </div>
-      <p class="hint" style="margin-top:0.75rem">Texas WWTF demo password + recommended inbox: <a href="https://github.com/rdksupe/fieldclaw/blob/main/README.md#demo-access" target="_blank" rel="noopener">README § demo-access</a></p>
+      <p class="hint" style="margin-top:0.75rem">Texas wastewater demo password + recommended inbox: <a href="https://github.com/rdksupe/fieldclaw/blob/main/README.md#demo-access" target="_blank" rel="noopener">README § demo-access</a></p>
       <div class="hint" id="loginOut"></div>
     </div>
   </div>
@@ -325,7 +325,7 @@
       <div class="row">
         <input id="adminInbox" placeholder="Existing inbox email (optional)" value="fc-my-site8506@agentmail.to" style="flex:1" />
       </div>
-      <div class="hint" id="onboardHint">1. Create / pick a project — Wilbarger demo inbox is prefilled: fc-my-site8506@agentmail.to
+      <div class="hint" id="onboardHint">1. Create / pick a project — Texas wastewater demo inbox is prefilled: fc-my-site8506@agentmail.to
 2. Save your admin profile (your name + project name)
 3. DM @kayaadmin_bot on Telegram, paste the pairing code, Approve + bind
 4. In Telegram send /init so the agent scaffolds the wiki, pulls mail, and imports zones
@@ -394,7 +394,7 @@
   </section>
 
   <section id="tab-cams" class="hidden">
-    <p class="cam-note" id="camNote">Wilbarger Creek RWWTF — four site views. Stills refresh; day movie loops so the wall reads live.</p>
+    <p class="cam-note" id="camNote">Texas wastewater site — four camera views. Stills refresh; day movie loops so the wall reads live.</p>
     <div class="cam-wall" id="camGrid"></div>
   </section>
 
@@ -591,8 +591,8 @@
         const data = await api(`/api/projects/${projectId}/cameras`);
         const cams = data.cameras || [];
         note.textContent = cams.length
-          ? `Wilbarger Creek RWWTF — ${cams.length} views. Day movie loops; stills are the last OxBlue frame.`
-          : "No Wilbarger cameras returned from OxBlue.";
+          ? `Texas wastewater site — ${cams.length} views. Day movie loops; stills are the last OxBlue frame.`
+          : "No site cameras returned from OxBlue.";
         grid.innerHTML = "";
         for (const cam of cams) {
           const tile = document.createElement("div");
@@ -1192,7 +1192,7 @@
     }
 
     const PROMPTS = {
-      create_project: "No project yet. For the Wilbarger demo: project name + inbox fc-my-site8506@agentmail.to (prefilled), then DM @kayaadmin_bot to pair, then /init in Telegram.",
+      create_project: "No project yet. For the Texas wastewater real env: project name + inbox fc-my-site8506@agentmail.to (prefilled), then DM @kayaadmin_bot to pair, then /init in Telegram.",
       register_admin: "Project exists but has no superintendent. Save your admin profile to claim it.",
       pair_telegram: "Admin registered but not bound to Telegram. DM @kayaadmin_bot, paste the pairing code below, then send /init.",
       ready: "Setup complete. Foremen pair via @kaya_foremenbot on the Crew tab (not the admin bot).",
